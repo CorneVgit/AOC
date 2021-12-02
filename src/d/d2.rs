@@ -9,7 +9,7 @@ fn d2values() -> Vec<(String, i64)> {
             Ok(x) => {
                 let mut s = x.split_ascii_whitespace();
                 let instruction = String::from(s.next().expect("no instruction"));
-                let value = s.next().expect("no value").parse().expect("parsing to i64 failed");
+                let value = s.next().expect("no value").parse().unwrap();
 
                 values.push((instruction, value));
             }
