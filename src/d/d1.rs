@@ -7,7 +7,7 @@ fn d1values() -> Vec<u64> {
     for result_value in result_values {
         let value = match result_value {
             Ok(x) => x,
-            _ => continue
+            _ => continue,
         };
         values.push(value);
     }
@@ -25,7 +25,7 @@ pub fn d1a() {
     for value in values {
         let old_v = match old_value {
             None => value,
-            Some(x) => x
+            Some(x) => x,
         };
 
         if value > old_v {

@@ -12,8 +12,8 @@ fn d2values() -> Vec<(String, i64)> {
                 let v = s.next().expect("no value");
 
                 values.push((instruction, v.parse().expect("value to u64 parsing failed")));
-            },
-            _ => continue
+            }
+            _ => continue,
         };
     }
 
@@ -31,12 +31,13 @@ pub fn d2a() {
             "forward" => distance += value.1,
             "down" => depth += value.1,
             "up" => depth -= value.1,
-            _ => continue
+            _ => continue,
         }
     }
 
     println!("{}", distance * depth);
 }
+
 pub fn d2b() {
     let values = d2values();
 
@@ -49,10 +50,10 @@ pub fn d2b() {
             "forward" => {
                 distance += value.1;
                 depth += aim * value.1;
-            },
+            }
             "down" => aim += value.1,
             "up" => aim -= value.1,
-            _ => continue
+            _ => continue,
         }
     }
 

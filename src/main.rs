@@ -1,5 +1,5 @@
-mod util;
 mod d;
+mod util;
 
 use crate::d::d2::*;
 
