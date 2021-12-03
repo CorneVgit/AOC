@@ -17,7 +17,7 @@ fn d2values() -> Vec<(String, i64)> {
         };
     }
 
-    return values;
+    values
 }
 
 pub fn d2a() {

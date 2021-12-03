@@ -12,7 +12,7 @@ fn d1values() -> Vec<u64> {
         values.push(value);
     }
 
-    return values;
+    values
 }
 
 pub fn d1a() {
