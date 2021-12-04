@@ -41,8 +41,6 @@ pub fn d4ab() {
     initialize_bingo_cards(values, &mut bingo_cards);
 
     for (random_number_count, random_number) in random_numbers.into_iter().enumerate() {
-        bingo_cards.retain(|_, bingo_card| !bingo_card.won == true);
-
         for (_, bingo_card) in &mut bingo_cards {
             mark_bingo_card(bingo_card, random_number);
 
@@ -53,6 +51,10 @@ pub fn d4ab() {
                     results.push(r)
                 }
             }
+        }
+
+        if random_number_count >= 5 {
+            bingo_cards.retain(|_, bingo_card| !bingo_card.won == true)
         }
     }
 
