@@ -2,6 +2,14 @@ use std::collections::HashMap;
 
 use crate::util::read_all;
 
+const BOARD_ROW_COUNT: usize = 5;
+const BOARD_COLUMN_COUNT: usize = 5;
+
+struct BingoCard {
+    board: Vec<(u32, bool)>,
+    won: bool,
+}
+
 fn d4values() -> Vec<String> {
     let result_values = read_all::<String>("input_4");
     let mut values: Vec<String> = Vec::new();
@@ -27,17 +35,40 @@ pub fn d4ab() {
         .map(|x| x.parse().unwrap())
         .collect();
 
-    const BOARD_ROW_COUNT: usize = 5;
-    const BOARD_COLUMN_COUNT: usize = 5;
-
-    struct BingoCard {
-        board: Vec<(u32, bool)>,
-        won: bool,
-    }
-
     let mut bingo_cards: HashMap<usize, BingoCard> = HashMap::new();
     let mut results: Vec<u32> = Vec::new();
 
+    initialize_bingo_cards(values, &mut bingo_cards);
+
+    for (random_number_count, random_number) in random_numbers.into_iter().enumerate() {
+        bingo_cards.retain(|_, bingo_card| !bingo_card.won == true);
+
+        for (_, bingo_card) in &mut bingo_cards {
+            mark_bingo_card(bingo_card, random_number);
+
+            if random_number_count >= 5 {
+                if let Some(r) = check_rows(bingo_card, random_number) {
+                    results.push(r);
+                } else if let Some(r) = check_columns(bingo_card, random_number) {
+                    results.push(r)
+                }
+            }
+        }
+    }
+
+    println!("{}", results.first().unwrap());
+    println!("{}", results.last().unwrap());
+}
+
+fn mark_bingo_card(bingo_card: &mut BingoCard, random_number: u32) {
+    for (n, marked) in bingo_card.board.iter_mut() {
+        if *n == random_number {
+            *marked = true;
+        }
+    }
+}
+
+fn initialize_bingo_cards(values: Vec<String>, bingo_cards: &mut HashMap<usize, BingoCard>) {
     for bingo_card_index in 0..values[1..].len() / 6 {
         let board: Vec<(u32, bool)> = values[bingo_card_index * 6 + 2..=(bingo_card_index + 1) * 6]
             .join(" ")
@@ -47,72 +78,61 @@ pub fn d4ab() {
 
         bingo_cards.insert(bingo_card_index, BingoCard { board, won: false });
     }
+}
 
-    for (i, random_number) in random_numbers.into_iter().enumerate() {
-        for (_, bingo_card) in &mut bingo_cards {
-            for (n, marked) in bingo_card.board.iter_mut() {
-                if *n == random_number {
-                    *marked = true;
-                }
-            }
+fn check_rows(bingo_card: &mut BingoCard, random_number: u32) -> Option<u32> {
+    for row_index in 0..BOARD_ROW_COUNT {
+        if bingo_card.board[row_index..row_index + BOARD_COLUMN_COUNT]
+            .iter()
+            .filter(|(_, marked)| *marked)
+            .collect::<Vec<&(u32, bool)>>()
+            .len()
+            == 5
+        {
+            let sum: u32 = bingo_card
+                .board
+                .iter()
+                .filter_map(|(n, marked)| match *marked {
+                    false => Some(n),
+                    true => None,
+                })
+                .sum();
 
-            if i >= 5 {
-                for row_index in 0..BOARD_ROW_COUNT {
-                    if bingo_card.board[row_index..row_index + BOARD_COLUMN_COUNT]
-                        .iter()
-                        .filter(|(_, marked)| *marked)
-                        .collect::<Vec<&(u32, bool)>>()
-                        .len()
-                        == 5
-                    {
-                        let sum: u32 = bingo_card
-                            .board
-                            .iter()
-                            .filter_map(|(n, marked)| match *marked {
-                                false => Some(n),
-                                true => None,
-                            })
-                            .sum();
-
-                        if bingo_card.won == false {
-                            results.push(random_number * sum);
-                        }
-
-                        bingo_card.won = true;
-                        break;
-                    }
-                }
-
-                for column_index in 0..BOARD_COLUMN_COUNT {
-                    if bingo_card.board[column_index..]
-                        .iter()
-                        .step_by(BOARD_COLUMN_COUNT)
-                        .filter(|(_, marked)| *marked)
-                        .collect::<Vec<&(u32, bool)>>()
-                        .len()
-                        == 5
-                    {
-                        let sum: u32 = bingo_card
-                            .board
-                            .iter()
-                            .filter_map(|(n, marked)| match *marked {
-                                false => Some(n),
-                                true => None,
-                            })
-                            .sum();
-
-                        if bingo_card.won == false {
-                            results.push(random_number * sum);
-                        }
-
-                        bingo_card.won = true;
-                        break;
-                    }
-                }
+            if bingo_card.won == false {
+                bingo_card.won = true;
+                return Some(random_number * sum);
             }
         }
     }
 
-    println!("{}", results.first().unwrap());
-    println!("{}", results.last().unwrap());
+    return None;
+}
+
+fn check_columns(bingo_card: &mut BingoCard, random_number: u32) -> Option<u32> {
+    for column_index in 0..BOARD_COLUMN_COUNT {
+        if bingo_card.board[column_index..]
+            .iter()
+            .step_by(BOARD_COLUMN_COUNT)
+            .filter(|(_, marked)| *marked)
+            .collect::<Vec<&(u32, bool)>>()
+            .len()
+            == 5
+        {
+            let sum: u32 = bingo_card
+                .board
+                .iter()
+                .filter_map(|(n, marked)| match *marked {
+                    false => Some(n),
+                    true => None,
+                })
+                .sum();
+
+            if bingo_card.won == false {
+                bingo_card.won = true;
+                return Some(random_number * sum);
+            }
+        }
+    }
+
+    return None;
 }
