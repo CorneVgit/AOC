@@ -20,99 +20,94 @@ fn d4values() -> Vec<String> {
 pub fn d4ab() {
     let values = d4values();
 
-    let random_numbers: Vec<usize> = values
+    let random_numbers: Vec<u32> = values
         .first()
         .unwrap()
         .split(',')
-        .map(|x| x.parse::<usize>().unwrap())
+        .map(|x| x.parse().unwrap())
         .collect();
 
     const BOARD_ROW_COUNT: usize = 5;
     const BOARD_COLUMN_COUNT: usize = 5;
 
-    let mut boards: HashMap<usize, (Vec<(usize, bool)>, bool)> = HashMap::new();
-    let mut results: Vec<usize> = Vec::new();
+    struct BingoCard {
+        board: Vec<(u32, bool)>,
+        won: bool,
+    }
 
-    for board_index in 0..values[1..].len() / 6 {
-        for value in &values[board_index * 6 + 2..=(board_index + 1) * 6] {
-            let row_numbers: Vec<(usize, bool)> = value
-                .split_whitespace()
-                .map(|x| (x.parse::<usize>().unwrap(), false))
-                .collect();
+    let mut bingo_cards: HashMap<usize, BingoCard> = HashMap::new();
+    let mut results: Vec<u32> = Vec::new();
 
-            match boards.get_mut(&board_index) {
-                Some(x) => x.0.append(&mut row_numbers.clone()),
-                None => {
-                    boards.insert(board_index, (row_numbers.clone(), false));
-                }
-            };
-        }
+    for bingo_card_index in 0..values[1..].len() / 6 {
+        let board: Vec<(u32, bool)> = values[bingo_card_index * 6 + 2..=(bingo_card_index + 1) * 6]
+            .join(" ")
+            .split_whitespace()
+            .map(|n| (n.parse::<u32>().unwrap(), false))
+            .collect();
+
+        bingo_cards.insert(bingo_card_index, BingoCard { board, won: false });
     }
 
     for (i, random_number) in random_numbers.into_iter().enumerate() {
-        for (_, board) in &mut boards {
-            board.0.iter_mut().for_each(|(n, marked)| {
+        for (_, bingo_card) in &mut bingo_cards {
+            for (n, marked) in bingo_card.board.iter_mut() {
                 if *n == random_number {
                     *marked = true;
                 }
-            });
+            }
 
             if i >= 5 {
-                let mut marked_count = 0;
-                for j in 0..BOARD_ROW_COUNT {
-                    for (_, marked) in &board.0[j..j + 5] {
-                        if *marked {
-                            marked_count += 1;
-                        }
-                    }
-
-                    if marked_count == 5 {
-                        let s = board
-                            .0
+                for row_index in 0..BOARD_ROW_COUNT {
+                    if bingo_card.board[row_index..row_index + BOARD_COLUMN_COUNT]
+                        .iter()
+                        .filter(|(_, marked)| *marked)
+                        .collect::<Vec<&(u32, bool)>>()
+                        .len()
+                        == 5
+                    {
+                        let sum: u32 = bingo_card
+                            .board
                             .iter()
                             .filter_map(|(n, marked)| match *marked {
                                 false => Some(n),
                                 true => None,
                             })
-                            .sum::<usize>();
+                            .sum();
 
-                        if board.1 == false {
-                            results.push(random_number * s);
+                        if bingo_card.won == false {
+                            results.push(random_number * sum);
                         }
 
-                        board.1 = true;
+                        bingo_card.won = true;
                         break;
                     }
-
-                    marked_count = 0;
                 }
 
-                for j in 0..BOARD_COLUMN_COUNT {
-                    for (_, marked) in board.0[j..].iter().step_by(5) {
-                        if *marked {
-                            marked_count += 1;
-                        }
-                    }
-
-                    if marked_count == 5 {
-                        let s = board
-                            .0
+                for column_index in 0..BOARD_COLUMN_COUNT {
+                    if bingo_card.board[column_index..]
+                        .iter()
+                        .step_by(BOARD_COLUMN_COUNT)
+                        .filter(|(_, marked)| *marked)
+                        .collect::<Vec<&(u32, bool)>>()
+                        .len()
+                        == 5
+                    {
+                        let sum: u32 = bingo_card
+                            .board
                             .iter()
                             .filter_map(|(n, marked)| match *marked {
                                 false => Some(n),
                                 true => None,
                             })
-                            .sum::<usize>();
+                            .sum();
 
-                        if board.1 == false {
-                            results.push(random_number * s);
+                        if bingo_card.won == false {
+                            results.push(random_number * sum);
                         }
 
-                        board.1 = true;
+                        bingo_card.won = true;
                         break;
                     }
-
-                    marked_count = 0;
                 }
             }
         }
