@@ -91,19 +91,7 @@ fn check_rows(bingo_card: &mut BingoCard, random_number: u32) -> Option<u32> {
             .len()
             == 5
         {
-            let sum: u32 = bingo_card
-                .board
-                .iter()
-                .filter_map(|(n, marked)| match *marked {
-                    false => Some(n),
-                    true => None,
-                })
-                .sum();
-
-            if bingo_card.won == false {
-                bingo_card.won = true;
-                return Some(random_number * sum);
-            }
+            return calculate_result(bingo_card, random_number);
         }
     }
 
@@ -120,21 +108,23 @@ fn check_columns(bingo_card: &mut BingoCard, random_number: u32) -> Option<u32> 
             .len()
             == 5
         {
-            let sum: u32 = bingo_card
-                .board
-                .iter()
-                .filter_map(|(n, marked)| match *marked {
-                    false => Some(n),
-                    true => None,
-                })
-                .sum();
-
-            if bingo_card.won == false {
-                bingo_card.won = true;
-                return Some(random_number * sum);
-            }
+            return calculate_result(bingo_card, random_number);
         }
     }
 
     return None;
+}
+
+fn calculate_result(bingo_card: &mut BingoCard, random_number: u32) -> Option<u32> {
+    let sum: u32 = bingo_card
+        .board
+        .iter()
+        .filter_map(|(n, marked)| match *marked {
+            false => Some(n),
+            true => None,
+        })
+        .sum();
+
+    bingo_card.won = true;
+    return Some(random_number * sum);
 }
