@@ -1,9 +1,18 @@
 mod d;
 mod util;
 
-use crate::d::d5::*;
+use std::time::Instant;
+
+use crate::d::d6::*;
 
 fn main() {
-    d5a();
-    d5b();
+    let before = Instant::now();
+    d6_slow(80);
+    println!("Elapsed time: {:.2?}", before.elapsed());
+    let before = Instant::now();
+    d6_slow_recursive(80);
+    println!("Elapsed time: {:.2?}", before.elapsed());
+    let before = Instant::now();
+    d6_fast(80);
+    println!("Elapsed time: {:.2?}", before.elapsed());
 }
