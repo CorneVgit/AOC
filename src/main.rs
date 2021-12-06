@@ -1,8 +1,9 @@
 mod d;
 mod util;
 
-use crate::d::d4::*;
+use crate::d::d5::*;
 
 fn main() {
-    d4ab();
+    d5a();
+    d5b();
 }
