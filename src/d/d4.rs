@@ -53,7 +53,7 @@ pub fn d4ab() {
             }
         }
 
-        if random_number_count >= 5 {
+        if results.len() >= 1 {
             bingo_cards.retain(|_, bingo_card| !bingo_card.won == true)
         }
     }
