@@ -1,4 +1,7 @@
-use std::collections::HashMap;
+use std::collections::{
+    hash_map::Entry::{Occupied, Vacant},
+    HashMap,
+};
 
 use crate::util::read_all;
 
@@ -73,8 +76,8 @@ pub fn d5a() {
                 let p = Point { x, y };
 
                 match field.entry(p) {
-                    std::collections::hash_map::Entry::Occupied(o) => *o.into_mut() += 1,
-                    std::collections::hash_map::Entry::Vacant(_) => {
+                    Occupied(o) => *o.into_mut() += 1,
+                    Vacant(_) => {
                         field.insert(p, 1);
                     }
                 };
@@ -106,8 +109,8 @@ pub fn d5b() {
                 let p = Point { x, y };
 
                 match field.entry(p) {
-                    std::collections::hash_map::Entry::Occupied(o) => *o.into_mut() += 1,
-                    std::collections::hash_map::Entry::Vacant(_) => {
+                    Occupied(o) => *o.into_mut() += 1,
+                    Vacant(_) => {
                         field.insert(p, 1);
                     }
                 };
@@ -125,8 +128,8 @@ pub fn d5b() {
             }
 
             match field.entry(p) {
-                std::collections::hash_map::Entry::Occupied(o) => *o.into_mut() += 1,
-                std::collections::hash_map::Entry::Vacant(_) => {
+                Occupied(o) => *o.into_mut() += 1,
+                Vacant(_) => {
                     field.insert(p, 1);
                 }
             };
