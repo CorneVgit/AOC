@@ -65,10 +65,15 @@ pub fn d9b() {
 
     basin_sizes.sort();
 
-    println!("{:?}", &basin_sizes[basin_sizes.len() - 3..basin_sizes.len()].into_iter().fold(1, |acc, x| acc * x));
+    println!(
+        "{:?}",
+        &basin_sizes[basin_sizes.len() - 3..basin_sizes.len()]
+            .into_iter()
+            .fold(1, |acc, x| acc * x)
+    );
 }
 
-fn calculate_basin_size(values: &[Vec<Point>], point: &Point, marked: &mut[Vec<bool>]) -> usize {
+fn calculate_basin_size(values: &[Vec<Point>], point: &Point, marked: &mut [Vec<bool>]) -> usize {
     let row_count = values.len();
     let col_count = values.first().unwrap().len();
 
@@ -111,7 +116,7 @@ fn calculate_basin_size(values: &[Vec<Point>], point: &Point, marked: &mut[Vec<b
         }
     }
 
-    size
+    return size;
 }
 
 fn get_low_points(values: &[Vec<Point>]) -> Vec<Point> {
@@ -157,7 +162,7 @@ fn get_low_points(values: &[Vec<Point>]) -> Vec<Point> {
         }
     }
 
-    low_points
+    return low_points;
 }
 
 fn get_value(values: &[Vec<Point>], x: usize, y: usize) -> Option<&Point> {
