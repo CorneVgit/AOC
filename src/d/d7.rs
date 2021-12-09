@@ -34,7 +34,10 @@ pub fn d7a() {
         }
     }
 
-    println!("{}", new_values.iter().sum::<usize>() - (median * values.len()));
+    println!(
+        "{}",
+        new_values.iter().sum::<usize>() - (median * values.len())
+    );
 }
 
 pub fn d7b() {
