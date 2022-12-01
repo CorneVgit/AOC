@@ -68,8 +68,8 @@ pub fn d9b() {
     println!(
         "{:?}",
         &basin_sizes[basin_sizes.len() - 3..basin_sizes.len()]
-            .into_iter()
-            .fold(1, |acc, x| acc * x)
+            .iter()
+            .product::<usize>()
     );
 }
 
@@ -90,33 +90,33 @@ fn calculate_basin_size(values: &[Vec<Point>], point: &Point, marked: &mut [Vec<
     if point.x < row_count {
         if let Some(v) = get_value(values, point.x + 1, point.y) {
             if v.value > point.value {
-                size += calculate_basin_size(values, &v, marked);
+                size += calculate_basin_size(values, v, marked);
             }
         }
     }
     if point.x > 0 {
-        if let Some(v) = get_value(&values, point.x - 1, point.y) {
+        if let Some(v) = get_value(values, point.x - 1, point.y) {
             if v.value > point.value {
-                size += calculate_basin_size(values, &v, marked);
+                size += calculate_basin_size(values, v, marked);
             }
         }
     }
     if point.y < col_count {
-        if let Some(v) = get_value(&values, point.x, point.y + 1) {
+        if let Some(v) = get_value(values, point.x, point.y + 1) {
             if v.value > point.value {
-                size += calculate_basin_size(values, &v, marked);
+                size += calculate_basin_size(values, v, marked);
             }
         }
     }
     if point.y > 0 {
-        if let Some(v) = get_value(&values, point.x, point.y - 1) {
+        if let Some(v) = get_value(values, point.x, point.y - 1) {
             if v.value > point.value {
-                size += calculate_basin_size(values, &v, marked);
+                size += calculate_basin_size(values, v, marked);
             }
         }
     }
 
-    return size;
+    size
 }
 
 fn get_low_points(values: &[Vec<Point>]) -> Vec<Point> {
@@ -137,21 +137,21 @@ fn get_low_points(values: &[Vec<Point>]) -> Vec<Point> {
                 }
             }
             if x > 0 {
-                if let Some(v) = get_value(&values, x - 1, y) {
+                if let Some(v) = get_value(values, x - 1, y) {
                     if v.value <= cur.value {
                         continue;
                     }
                 }
             }
             if y < col_count {
-                if let Some(v) = get_value(&values, x, y + 1) {
+                if let Some(v) = get_value(values, x, y + 1) {
                     if v.value <= cur.value {
                         continue;
                     }
                 }
             }
             if y > 0 {
-                if let Some(v) = get_value(&values, x, y - 1) {
+                if let Some(v) = get_value(values, x, y - 1) {
                     if v.value <= cur.value {
                         continue;
                     }
@@ -162,14 +162,12 @@ fn get_low_points(values: &[Vec<Point>]) -> Vec<Point> {
         }
     }
 
-    return low_points;
+    low_points
 }
 
 fn get_value(values: &[Vec<Point>], x: usize, y: usize) -> Option<&Point> {
     match values.get(x) {
-        Some(row) => {
-            return row.get(y);
-        }
-        None => return None,
+        Some(row) => row.get(y),
+        None => None,
     }
 }

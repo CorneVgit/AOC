@@ -1,5 +1,3 @@
-#![feature(int_abs_diff)]
-
 mod d;
 mod util;
 
