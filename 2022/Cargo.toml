@@ -18,5 +18,5 @@ unwrap-infallible = "0.1.5"
 criterion = "0.4"
 
 [[bench]]
-name = "d1"
+name = "d"
 harness = false
