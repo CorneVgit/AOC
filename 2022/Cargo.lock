@@ -13,6 +13,8 @@ name = "aoc2022"
 version = "0.1.0"
 dependencies = [
  "criterion",
+ "itertools",
+ "sets",
  "unwrap-infallible",
 ]
 
@@ -220,6 +222,12 @@ dependencies = [
  "autocfg",
  "hashbrown",
 ]
+
+[[package]]
+name = "indxvec"
+version = "1.4.9"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "dc3b2eb49069d3e31ab51c7ae40f729d2627ef9239481f7bd4896b1304a2da1c"
 
 [[package]]
 name = "itertools"
@@ -446,6 +454,15 @@ dependencies = [
  "itoa",
  "ryu",
  "serde",
+]
+
+[[package]]
+name = "sets"
+version = "1.2.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "4dbe0786a87068954c69454cba181d8fa8bb71b049cddfa0f3ad3174c6234bd5"
+dependencies = [
+ "indxvec",
 ]
 
 [[package]]
