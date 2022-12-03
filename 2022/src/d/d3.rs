@@ -27,7 +27,7 @@ pub fn d3() -> (u32, u32) {
         let intersection: Set<u8> = Set::new(SType::Unordered, comp1.as_bytes(), true)
             .intersection(&Set::new(SType::Unordered, comp2.as_bytes(), true));
 
-        total_priority += calculate_priority(*intersection.data.first().unwrap()) as u32;
+        total_priority += calculate_priority(intersection.data.first().unwrap()) as u32;
     }
 
     let r1 = total_priority;
@@ -43,7 +43,7 @@ pub fn d3() -> (u32, u32) {
             .iter()
             .fold(sets[0].to_owned(), |acc, s| acc.intersection(s));
 
-        total_priority += calculate_priority(*intersection.data.first().unwrap()) as u32;
+        total_priority += calculate_priority(intersection.data.first().unwrap()) as u32;
     }
 
     let r2 = total_priority;
@@ -51,7 +51,7 @@ pub fn d3() -> (u32, u32) {
     (r1, r2)
 }
 
-fn calculate_priority(c: u8) -> u8 {
+fn calculate_priority(c: &u8) -> u8 {
     if c.is_ascii_uppercase() {
         c - 64u8 + 26u8
     } else if c.is_ascii_lowercase() {

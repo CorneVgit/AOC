@@ -7,7 +7,7 @@ fn values() -> Vec<String> {
     let mut games: Vec<String> = Vec::new();
 
     for result_value in result_values {
-        let game =  result_value.unwrap_infallible();
+        let game = result_value.unwrap_infallible();
         games.push(game);
     }
 
@@ -32,7 +32,7 @@ pub fn d2() -> (u32, u32) {
             "C X" => 7,
             "A Y" => 8,
             "B Z" => 9,
-            _ => panic!("Invalid input")
+            _ => panic!("Invalid input"),
         }
     }
 
@@ -53,7 +53,7 @@ pub fn d2() -> (u32, u32) {
             "A Z" => 8,
             "B Z" => 9,
             "C Z" => 7,
-            _ => panic!("Invalid input")
+            _ => panic!("Invalid input"),
         }
     }
 

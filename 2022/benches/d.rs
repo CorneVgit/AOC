@@ -1,6 +1,5 @@
-use criterion::{criterion_group, criterion_main, Criterion};
 use aoc2022::d::*;
-
+use criterion::{criterion_group, criterion_main, Criterion};
 
 fn criterion_benchmark(c: &mut Criterion) {
     c.bench_function("d1", |b| b.iter(d1::d1));
