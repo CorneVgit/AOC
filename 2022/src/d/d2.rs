@@ -3,15 +3,10 @@ use unwrap_infallible::UnwrapInfallible;
 use crate::util::read_all;
 
 fn values() -> Vec<String> {
-    let result_values = read_all::<String>("input_2");
-    let mut games: Vec<String> = Vec::new();
-
-    for result_value in result_values {
-        let game = result_value.unwrap_infallible();
-        games.push(game);
-    }
-
-    games
+    read_all::<String>("input_2")
+        .into_iter()
+        .map(|game| game.unwrap_infallible())
+        .collect()
 }
 
 pub fn d2() -> (u32, u32) {

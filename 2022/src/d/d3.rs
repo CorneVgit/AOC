@@ -5,15 +5,10 @@ use unwrap_infallible::UnwrapInfallible;
 use crate::util::read_all;
 
 fn values() -> Vec<String> {
-    let result_values = read_all::<String>("input_3");
-    let mut rucksacks: Vec<String> = Vec::new();
-
-    for result_value in result_values {
-        let rucksack = result_value.unwrap_infallible();
-        rucksacks.push(rucksack);
-    }
-
-    rucksacks
+    read_all::<String>("input_3")
+        .into_iter()
+        .map(|rucksack| rucksack.unwrap_infallible())
+        .collect()
 }
 
 pub fn d3() -> (u32, u32) {
