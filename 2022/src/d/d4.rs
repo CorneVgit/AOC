@@ -25,12 +25,14 @@ pub fn d4() -> (u32, u32) {
         let e2_lb: i32 = e2_lb.parse().unwrap(); // elf 2 lower bound
         let e2_ub: i32 = e2_ub.parse().unwrap(); // elf 2 upper bound
 
-        if e1_lb <= e2_lb && e1_ub >= e2_ub || e1_lb >= e2_lb && e1_ub <= e2_ub {
-            r1 += 1;
-        }
-
         if e1_lb <= e2_lb && e1_ub >= e2_lb || e1_lb >= e2_lb && e1_lb <= e2_ub {
+            // Partly contains
             r2 += 1;
+
+            if e1_lb <= e2_lb && e1_ub >= e2_ub || e1_lb >= e2_lb && e1_ub <= e2_ub {
+                // Fully contains
+                r1 += 1;
+            }
         }
     }
 
