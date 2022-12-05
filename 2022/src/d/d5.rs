@@ -76,7 +76,7 @@ fn init(
     }
 
     container_rows.reverse();
-    let stack_count =
+    let column_count =
         container_rows[0].chars().fold(
             0,
             |count, c| {
@@ -88,7 +88,7 @@ fn init(
             },
         );
 
-    let mut container_columns = vec![VecDeque::new(); stack_count];
+    let mut container_columns = vec![VecDeque::new(); column_count];
     for row in &container_rows[1..] {
         let row_iter = &mut row.chars();
 
