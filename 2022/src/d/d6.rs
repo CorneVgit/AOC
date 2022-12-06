@@ -41,7 +41,10 @@ pub fn d6_fast() -> (usize, usize) {
             if r1 == 0 {
                 r1 = i + 4;
             }
-            if all_unique(7, &input, &mut i) && all_unique(11, &input, &mut i) && all_unique(14, &input, &mut i) {
+            if all_unique(7, &input, &mut i)
+                && all_unique(11, &input, &mut i)
+                && all_unique(14, &input, &mut i)
+            {
                 r2 = i + 14;
                 break 'l;
             }
@@ -51,7 +54,7 @@ pub fn d6_fast() -> (usize, usize) {
     (r1, r2)
 }
 
-fn all_unique(max_o: usize, input: &[char], i: &mut usize) -> bool{
+fn all_unique(max_o: usize, input: &[char], i: &mut usize) -> bool {
     for o in 0..max_o {
         if input[*i + o + 1..*i + max_o].contains(&input[*i + o]) {
             *i += o + 1;

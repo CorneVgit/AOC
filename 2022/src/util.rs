@@ -13,6 +13,5 @@ pub fn read_all<T: FromStr>(file_name: &str) -> Vec<Result<T, <T as FromStr>::Er
 pub fn read_single_string(file_name: &str) -> String {
     let file_path = format!("data\\{}.txt", file_name);
 
-    std::fs::read_to_string(file_path)
-        .expect("file not found!")
+    std::fs::read_to_string(file_path).expect("file not found!")
 }
