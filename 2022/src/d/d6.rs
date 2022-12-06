@@ -31,46 +31,33 @@ pub fn d6_slow() -> (usize, usize) {
 pub fn d6_fast() -> (usize, usize) {
     let input = read_single_string("input_6").chars().collect::<Vec<char>>();
 
-    let mut r: HashMap<usize, usize> = HashMap::new();
-    let indices: Vec<usize> = vec![4, 9, 14];
+    let mut r1 = 0;
+    let r2;
 
-    all_unique(1, &input, &indices, &mut 0, &mut r);
+    let mut i = 0;
 
-    (r[&4], r[&14])
+    'l: loop {
+        if all_unique(4, &input, &mut i) {
+            if r1 == 0 {
+                r1 = i + 4;
+            }
+            if all_unique(7, &input, &mut i) && all_unique(11, &input, &mut i) && all_unique(14, &input, &mut i) {
+                r2 = i + 14;
+                break 'l;
+            }
+        }
+    }
+
+    (r1, r2)
 }
 
-fn all_unique(
-    indices_index: usize,
-    input: &[char],
-    indices: &[usize],
-    input_index: &mut usize,
-    r: &mut HashMap<usize, usize>,
-) {
-    'l: loop {
-        for o in 0..indices[indices_index - 1] {
-            if *input_index + r.len() >= input.len() {
-                return;
-            }
-            if input[*input_index + o + 1..*input_index + indices[indices_index - 1]]
-                .contains(&input[*input_index + o])
-            {
-                *input_index += o + 1;
-
-                if indices_index != 1 {
-                    return;
-                } else {
-                    continue 'l;
-                }
-            }
+fn all_unique(max_o: usize, input: &[char], i: &mut usize) -> bool{
+    for o in 0..max_o {
+        if input[*i + o + 1..*i + max_o].contains(&input[*i + o]) {
+            *i += o + 1;
+            return false;
         }
-
-        r.entry(indices[indices_index - 1])
-            .or_insert(*input_index + indices[indices_index - 1]);
-
-        if r.len() == indices.len() {
-            return;
-        }
-
-        all_unique(indices_index + 1, input, indices, input_index, r);
     }
+
+    true
 }
