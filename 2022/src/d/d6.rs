@@ -1,5 +1,3 @@
-use std::collections::HashMap;
-
 use itertools::Itertools;
 
 use crate::util::read_single_string;
@@ -36,7 +34,7 @@ pub fn d6_fast() -> (usize, usize) {
 
     let mut i = 0;
 
-    'l: loop {
+    loop {
         if all_unique(4, &input, &mut i) {
             if r1 == 0 {
                 r1 = i + 4;
@@ -46,7 +44,7 @@ pub fn d6_fast() -> (usize, usize) {
                 && all_unique(14, &input, &mut i)
             {
                 r2 = i + 14;
-                break 'l;
+                break;
             }
         }
     }
