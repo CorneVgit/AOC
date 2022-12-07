@@ -2,6 +2,7 @@ use id_tree::{
     InsertBehavior::{AsRoot, UnderNode},
     Node, NodeId, Tree,
 };
+use std::str::SplitAsciiWhitespace;
 use unwrap_infallible::UnwrapInfallible;
 
 use crate::util::read_all;
@@ -35,10 +36,14 @@ pub fn d7() -> (usize, usize) {
 
     calculate_directory_sizes(&mut file_system);
 
-    let space_to_free = calculate_space_to_free(&file_system);
+    const FILE_SYSTEM_SIZE: usize = 70_000_000;
+    const UNUSED_SPACE_REQUIRED: usize = 30_000_000;
+
+    let space_to_free =
+        calculate_space_to_free(&file_system, FILE_SYSTEM_SIZE, UNUSED_SPACE_REQUIRED);
 
     let mut r1 = 0;
-    let mut r2 = usize::MAX;
+    let mut r2 = FILE_SYSTEM_SIZE;
 
     for n in file_system
         .traverse_pre_order(file_system.root_node_id().unwrap())
@@ -62,19 +67,19 @@ pub fn d7() -> (usize, usize) {
 
 fn parse_shell(
     shell: &str,
-    mut line_split: std::str::SplitAsciiWhitespace,
+    mut line_split: SplitAsciiWhitespace,
     file_system: &mut Tree<Entry>,
     current_node: &mut Option<NodeId>,
 ) {
     match shell {
         "$" => parse_command(&mut line_split, file_system, current_node),
         "dir" => parse_directory(&mut line_split, file_system, current_node),
-        _ => parse_file(shell, line_split, file_system, current_node),
+        _ => parse_file(shell, &mut line_split, file_system, current_node),
     }
 }
 
 fn parse_command(
-    line_split: &mut std::str::SplitAsciiWhitespace,
+    line_split: &mut SplitAsciiWhitespace,
     file_system: &mut Tree<Entry>,
     current_node: &mut Option<NodeId>,
 ) {
@@ -89,7 +94,7 @@ fn parse_command(
 }
 
 fn parse_command_cd(
-    line_split: &mut std::str::SplitAsciiWhitespace,
+    line_split: &mut SplitAsciiWhitespace,
     file_system: &mut Tree<Entry>,
     current_node: &mut Option<NodeId>,
 ) {
@@ -152,7 +157,7 @@ fn parse_command_cd_dir(
 }
 
 fn parse_directory(
-    line_split: &mut std::str::SplitAsciiWhitespace,
+    line_split: &mut SplitAsciiWhitespace,
     file_system: &mut Tree<Entry>,
     current_node: &mut Option<NodeId>,
 ) {
@@ -174,7 +179,7 @@ fn parse_directory(
 
 fn parse_file(
     shell: &str,
-    mut line_split: std::str::SplitAsciiWhitespace,
+    line_split: &mut SplitAsciiWhitespace,
     file_system: &mut Tree<Entry>,
     current_node: &mut Option<NodeId>,
 ) {
@@ -214,13 +219,17 @@ fn calculate_directory_sizes(file_system: &mut Tree<Entry>) {
     }
 }
 
-fn calculate_space_to_free(file_system: &Tree<Entry>) -> usize {
+fn calculate_space_to_free(
+    file_system: &Tree<Entry>,
+    file_system_size: usize,
+    unused_space_required: usize,
+) -> usize {
     let used_space = file_system
         .get(&file_system.root_node_id().unwrap().clone())
         .unwrap()
         .data()
         .size
-        - (70_000_000 - 30_000_000);
+        - (file_system_size - unused_space_required);
 
     used_space
 }
