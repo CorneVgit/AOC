@@ -13,6 +13,7 @@ name = "aoc2022"
 version = "0.1.0"
 dependencies = [
  "criterion",
+ "id_tree",
  "itertools",
  "sets",
  "unwrap-infallible",
@@ -211,6 +212,15 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "62b467343b94ba476dcb2500d242dadbb39557df889310ac77c5d99100aaac33"
 dependencies = [
  "libc",
+]
+
+[[package]]
+name = "id_tree"
+version = "1.8.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "bcd9db8dd5be8bde5a2624ed4b2dfb74368fe7999eb9c4940fd3ca344b61071a"
+dependencies = [
+ "snowflake",
 ]
 
 [[package]]
@@ -464,6 +474,12 @@ checksum = "4dbe0786a87068954c69454cba181d8fa8bb71b049cddfa0f3ad3174c6234bd5"
 dependencies = [
  "indxvec",
 ]
+
+[[package]]
+name = "snowflake"
+version = "1.3.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "27207bb65232eda1f588cf46db2fee75c0808d557f6b3cf19a75f5d6d7c94df1"
 
 [[package]]
 name = "syn"
