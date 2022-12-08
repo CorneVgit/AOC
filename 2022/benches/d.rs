@@ -10,6 +10,7 @@ fn criterion_benchmark(c: &mut Criterion) {
     c.bench_function("d6_slow", |b| b.iter(d6::d6_slow));
     c.bench_function("d6_fast", |b| b.iter(d6::d6_fast));
     c.bench_function("d7", |b| b.iter(d7::d7));
+    c.bench_function("d8", |b| b.iter(d8::d8));
 }
 
 criterion_group!(benches, criterion_benchmark);
