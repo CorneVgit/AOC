@@ -14,18 +14,19 @@ fn values() -> DMatrix<u32> {
     let row_count = values.len();
     let col_count = values[0].len();
 
-    let mut m = DMatrix::zeros(row_count, col_count);
+    let mut grid = DMatrix::zeros(row_count, col_count);
 
     for (row_i, value) in values.iter().enumerate() {
         let mut row = RowDVector::<u32>::zeros(col_count);
+
         for (col_i, c) in value.chars().enumerate() {
             row[col_i] = c.to_digit(10).unwrap();
         }
 
-        m.set_row(row_i, &row);
+        grid.set_row(row_i, &row);
     }
 
-    m
+    grid
 }
 
 pub fn d8() -> (usize, usize) {
