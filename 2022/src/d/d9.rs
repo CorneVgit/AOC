@@ -6,7 +6,7 @@ use unwrap_infallible::UnwrapInfallible;
 use crate::util::read_all;
 
 fn values() -> Vec<String> {
-    read_all::<String>("input_9_example")
+    read_all::<String>("input_9")
         .into_iter()
         .map(|rucksack| rucksack.unwrap_infallible())
         .collect()
@@ -39,23 +39,21 @@ fn calc_num_of_visited_positions(values: &[String], rope_len: usize) -> usize {
         for _ in 0..distance {
             let mut i = 1;
             rope[0] += direction.coords;
-            while i < rope.len() {
-                let abs_dif = (rope[i - 1].coords - rope[i].coords).abs();
 
-                if abs_dif.max() > 1 {
-                    if abs_dif.sum() >= 2 {
-                        rope[i] += direction.coords;
-                    }
-                    if abs_dif.sum() == 3 {
-                        rope[i] = rope[i - 1] - direction.coords;
-                    }
+            while i < rope.len() {
+                let x_dif = rope[i - 1].coords.data.0[0][0] - rope[i].coords.data.0[0][0];
+                let y_dif = rope[i - 1].coords.data.0[0][1] - rope[i].coords.data.0[0][1];
+
+                if y_dif.abs() <= 1 && x_dif.abs() <= 1 {
+                    break;
                 }
+
+                rope[i] += &Point2::<i32>::new(x_dif.signum() * x_dif.abs().min(1), y_dif.signum() * y_dif.abs().min(1)).coords;
 
                 i += 1;
             }
-            visited_positions.insert(*rope.last().unwrap());
 
-            println!("{:?}", rope);
+            visited_positions.insert(*rope.last().unwrap());
         }
     }
 
