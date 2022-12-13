@@ -1,4 +1,4 @@
-use std::str::Chars;
+use std::{str::Chars, cmp::Ordering};
 
 use itertools::Itertools;
 use unwrap_infallible::UnwrapInfallible;
@@ -20,7 +20,7 @@ enum Item {
 }
 
 impl Ord for Item {
-    fn cmp(&self, other: &Self) -> std::cmp::Ordering {
+    fn cmp(&self, other: &Self) -> Ordering {
         match self {
             Item::Number(n1) => match other {
                 Item::Number(n2) => n1.cmp(n2),
@@ -32,20 +32,20 @@ impl Ord for Item {
                     for i in 0..l1.len() {
                         if i < l2.len() {
                             match l1[i].cmp(&l2[i]) {
-                                std::cmp::Ordering::Less => return std::cmp::Ordering::Less,
-                                std::cmp::Ordering::Equal => continue,
-                                std::cmp::Ordering::Greater => return std::cmp::Ordering::Greater,
+                                Ordering::Less => return Ordering::Less,
+                                Ordering::Equal => continue,
+                                Ordering::Greater => return Ordering::Greater,
                             }
                         } else {
-                            return std::cmp::Ordering::Greater;
+                            return Ordering::Greater;
                         }
                     }
 
                     if l1.len() == l2.len() {
-                        return std::cmp::Ordering::Equal;
+                        return Ordering::Equal;
                     }
 
-                    std::cmp::Ordering::Less
+                    Ordering::Less
                 }
             },
         }
@@ -53,7 +53,7 @@ impl Ord for Item {
 }
 
 impl PartialOrd for Item {
-    fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
+    fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
         Some(self.cmp(other))
     }
 }
@@ -102,7 +102,7 @@ pub fn d13() -> (usize, usize) {
         let item1 = Item::new(p1);
         let item2 = Item::new(p2);
 
-        if item1.cmp(&item2) != std::cmp::Ordering::Greater {
+        if item1.cmp(&item2) != Ordering::Greater {
             r1 += i + 1;
         }
 
