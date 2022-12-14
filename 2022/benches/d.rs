@@ -16,6 +16,7 @@ fn criterion_benchmark(c: &mut Criterion) {
     c.bench_function("d11", |b| b.iter(d11::d11));
     c.bench_function("d12", |b| b.iter(d12::d12));
     c.bench_function("d13", |b| b.iter(d13::d13));
+    c.bench_function("d14", |b| b.iter(d14::d14));
 }
 
 criterion_group!(benches, criterion_benchmark);
