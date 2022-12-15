@@ -15,6 +15,7 @@ strip = true
 id_tree = "1.8.0"
 itertools = "0.10.5"
 nalgebra = "0.31.4"
+regex = "1.7.0"
 sets = "1.2.0"
 unwrap-infallible = "0.1.5"
 
