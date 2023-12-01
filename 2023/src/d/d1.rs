@@ -49,15 +49,15 @@ pub fn d1() -> (i64, i64) {
         ];
 
         for (i, v) in lut.into_iter().enumerate() {
-            if let Some(m) = calibration_value.find(v) {
-                if (m as i64) < first_loc {
-                    first_loc = m as i64;
+            if let Some(loc) = calibration_value.find(v) {
+                if (loc as i64) < first_loc {
+                    first_loc = loc as i64;
                     first_val = i % 10;
                 }
             }
-            if let Some(m) = calibration_value.rfind(v) {
-                if (m as i64) > last_loc {
-                    last_loc = m as i64;
+            if let Some(loc) = calibration_value.rfind(v) {
+                if (loc as i64) > last_loc {
+                    last_loc = loc as i64;
                     last_val = i % 10;
                 }
             }
