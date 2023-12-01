@@ -17,8 +17,8 @@ pub fn d1() -> (i64, usize) {
     let mut r1 = 0;
 
     for calibration_value in &calibration_values {
-        let mut first_val: i64 = i64::MIN;
-        let mut last_val: i64 = i64::MAX;
+        let mut first_val= i64::MIN;
+        let mut last_val= i64::MAX;
 
         for c in calibration_value.chars() {
             if c.is_ascii_digit() {
