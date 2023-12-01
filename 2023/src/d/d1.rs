@@ -1,4 +1,3 @@
-use itertools::Itertools;
 use unwrap_infallible::UnwrapInfallible;
 
 use crate::util::read_all;
@@ -9,7 +8,7 @@ fn get_calibration_values() -> Vec<String> {
     result_values
         .into_iter()
         .map(|result_values| result_values.unwrap_infallible())
-        .collect_vec()
+        .collect()
 }
 
 pub fn d1() -> (i64, i64) {
