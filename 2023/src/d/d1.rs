@@ -42,12 +42,12 @@ pub fn d1() -> (i64, usize) {
         let mut first_loc = i64::MAX;
         let mut last_loc = i64::MIN;
 
-        let lut: Vec<&str> = vec![
+        const LUT: [&str; 20] = [
             "ඞ", "1", "2", "3", "4", "5", "6", "7", "8", "9", "ඞ", "one", "two", "three", "four",
             "five", "six", "seven", "eight", "nine",
         ];
 
-        for (i, v) in lut.into_iter().enumerate() {
+        for (i, v) in LUT.iter().enumerate() {
             if let Some(loc) = calibration_value.find(v) {
                 if (loc as i64) < first_loc {
                     first_loc = loc as i64;
