@@ -11,7 +11,7 @@ fn get_calibration_values() -> Vec<String> {
         .collect()
 }
 
-pub fn d1() -> (i64, i64) {
+pub fn d1() -> (i64, usize) {
     let calibration_values = get_calibration_values();
 
     let mut r1 = 0;
@@ -30,8 +30,7 @@ pub fn d1() -> (i64, i64) {
             }
         }
 
-        let val = first_val.to_string() + &last_val.to_string();
-        r1 += val.parse::<i64>().unwrap();
+        r1 += first_val * 10 + last_val;
     }
 
     let mut r2 = 0;
@@ -63,8 +62,7 @@ pub fn d1() -> (i64, i64) {
             }
         }
 
-        let val = first_val.to_string() + &last_val.to_string();
-        r2 += val.parse::<i64>().unwrap();
+        r2 += first_val * 10 + last_val;
     }
 
     (r1, r2)
