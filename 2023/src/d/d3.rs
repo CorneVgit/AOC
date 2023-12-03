@@ -16,9 +16,7 @@ pub fn d3() -> (i32, i32) {
     let input = get_input();
 
     let mut field: Vec<Vec<char>> = Vec::new();
-
-    let mut region = (-1, -1, -1);
-
+    let mut region = (-1, -1, -1); // (row, first digit, last digit)
     let mut regions: Vec<(i32, i32, i32)> = Vec::new();
 
     for line in input {
@@ -36,11 +34,11 @@ pub fn d3() -> (i32, i32) {
                     region = (i as i32, region.1, j as i32)
                 }
             } else {
-                process_part_number(&mut region, &field, &mut r1, &mut regions);
+                r1 += process_part_number(&mut region, &field, &mut regions);
             }
         }
 
-        process_part_number(&mut region, &field, &mut r1, &mut regions)
+        r1 += process_part_number(&mut region, &field, &mut regions)
     }
 
     let mut r2 = 0;
@@ -76,8 +74,11 @@ pub fn d3() -> (i32, i32) {
                         buffer.push(*v);
                     }
 
-                    let part_number_s: String = buffer.into_iter().collect();
-                    let part_number1 = part_number_s.parse::<i32>().unwrap();
+                    let part_number1 = buffer
+                        .into_iter()
+                        .collect::<String>()
+                        .parse::<i32>()
+                        .unwrap();
 
                     let mut buffer: Vec<char> = Vec::new();
                     let reg2 = reg.last().unwrap();
@@ -87,8 +88,11 @@ pub fn d3() -> (i32, i32) {
                         buffer.push(*v);
                     }
 
-                    let part_number_s: String = buffer.into_iter().collect();
-                    let part_number2 = part_number_s.parse::<i32>().unwrap();
+                    let part_number2 = buffer
+                        .into_iter()
+                        .collect::<String>()
+                        .parse::<i32>()
+                        .unwrap();
 
                     r2 += part_number1 * part_number2;
                 }
@@ -99,8 +103,13 @@ pub fn d3() -> (i32, i32) {
     (r1, r2)
 }
 
-fn process_part_number(region: &mut (i32, i32, i32), field: &[Vec<char>], r1: &mut i32, regions: &mut Vec<(i32, i32, i32)>) {
+fn process_part_number(
+    region: &mut (i32, i32, i32),
+    field: &[Vec<char>],
+    regions: &mut Vec<(i32, i32, i32)>,
+) -> i32 {
     let mut is_part_num = false;
+    let mut part_number = 0;
 
     if *region != (-1, -1, -1) {
         for k in (region.0 - 1)..=(region.0 + 1) {
@@ -130,11 +139,12 @@ fn process_part_number(region: &mut (i32, i32, i32), field: &[Vec<char>], r1: &m
             }
 
             let part_number_s: String = buffer.into_iter().collect();
-            let part_number = part_number_s.parse::<i32>().unwrap();
-            *r1 += part_number;
+            part_number = part_number_s.parse::<i32>().unwrap();
             regions.push(*region);
         }
     }
 
     *region = (-1, -1, -1);
+
+    part_number
 }
