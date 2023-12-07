@@ -10,7 +10,7 @@ fn values() -> Vec<String> {
 }
 
 pub fn d12() -> (usize, usize) {
-    let values = values();
+    let _values = values();
 
     let r1 = 0;
     let r2 = 0;

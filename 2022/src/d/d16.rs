@@ -87,7 +87,7 @@ fn find_highest_pressure(
         }
     }
 
-    let mut valve = valves.get_mut(&valve_id).unwrap();
+    let valve = valves.get_mut(&valve_id).unwrap();
     let mut flow_increase = 0;
     // open valve
     if time_left > 0 && valve.flow_rate > 0 && !valve.open_status {

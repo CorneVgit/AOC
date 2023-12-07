@@ -31,10 +31,10 @@ impl Ord for Item {
                 Item::List(l2) => {
                     for i in 0..l1.len() {
                         if i < l2.len() {
-                            match l1[i].cmp(&l2[i]) {
-                                Ordering::Less => return Ordering::Less,
+                            return match l1[i].cmp(&l2[i]) {
+                                Ordering::Less => Ordering::Less,
                                 Ordering::Equal => continue,
-                                Ordering::Greater => return Ordering::Greater,
+                                Ordering::Greater => Ordering::Greater,
                             }
                         } else {
                             return Ordering::Greater;
