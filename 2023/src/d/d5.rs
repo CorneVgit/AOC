@@ -51,7 +51,7 @@ pub fn d5() -> (u64, u64) {
 
     let mut r2 = u64::MAX;
 
-    for seed_range in seeds.chunks(2).map(|x| (x[0], x[1])).collect_vec() {
+    for seed_range in seeds.chunks(2).map(|x| (x[0], x[1])) {
         for seed in seed_range.0..(seed_range.0 + seed_range.1) {
             let location = calc_location(seed, &input);
 
