@@ -2,7 +2,6 @@ use std::collections::HashMap;
 
 use itertools::Itertools;
 use num::integer::lcm;
-use unwrap_infallible::UnwrapInfallible;
 
 use crate::util::read_all;
 
@@ -11,14 +10,14 @@ fn get_input() -> Vec<String> {
 
     result_values
         .into_iter()
-        .map(|result_values| result_values.unwrap_infallible())
+        .map(unwrap_infallible::UnwrapInfallible::unwrap_infallible)
         .collect()
 }
 
-pub fn d8() -> (u64, u64) {
+#[must_use] pub fn d8() -> (u64, u64) {
     let input = get_input();
 
-    let network = HashMap::from_iter(input[2..].iter().map(|line| {
+    let network: HashMap<&str, (String, String)> = input[2..].iter().map(|line| {
         let (node, next) = line.split_once(" = ").unwrap();
         let (left, right) = next
             .split(',')
@@ -31,7 +30,7 @@ pub fn d8() -> (u64, u64) {
             .unwrap();
 
         (node, (left, right))
-    }));
+    }).collect();
 
     let r1 = calc_steps("AAA", "ZZZ", input[0].chars().cycle(), &network);
 

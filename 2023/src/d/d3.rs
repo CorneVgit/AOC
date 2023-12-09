@@ -1,5 +1,4 @@
 use itertools::Itertools;
-use unwrap_infallible::UnwrapInfallible;
 
 use crate::util::read_all;
 
@@ -8,11 +7,11 @@ fn get_input() -> Vec<String> {
 
     result_values
         .into_iter()
-        .map(|result_values| result_values.unwrap_infallible())
+        .map(unwrap_infallible::UnwrapInfallible::unwrap_infallible)
         .collect()
 }
 
-pub fn d3() -> (i32, i32) {
+#[must_use] pub fn d3() -> (i32, i32) {
     let input = get_input();
 
     let mut field: Vec<Vec<char>> = Vec::new();
@@ -29,16 +28,16 @@ pub fn d3() -> (i32, i32) {
         for (j, value) in row.into_iter().enumerate() {
             if value.is_ascii_digit() {
                 if region == (-1, -1, -1) {
-                    region = (i as i32, j as i32, j as i32)
+                    region = (i as i32, j as i32, j as i32);
                 } else {
-                    region = (i as i32, region.1, j as i32)
+                    region = (i as i32, region.1, j as i32);
                 }
             } else {
                 r1 += process_part_number(&mut region, &field, &mut regions);
             }
         }
 
-        r1 += process_part_number(&mut region, &field, &mut regions)
+        r1 += process_part_number(&mut region, &field, &mut regions);
     }
 
     let mut r2 = 0;

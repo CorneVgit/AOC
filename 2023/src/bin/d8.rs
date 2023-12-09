@@ -1,4 +1,4 @@
-use aoc2023::d::d8::*;
+use aoc2023::d::d8::d8;
 
 fn main() {
     let (r1, r2) = d8();

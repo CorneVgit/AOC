@@ -1,5 +1,4 @@
 use itertools::Itertools;
-use unwrap_infallible::UnwrapInfallible;
 
 use crate::util::read_all;
 
@@ -8,7 +7,7 @@ fn get_input() -> Vec<(String, u64)> {
 
     result_values
         .into_iter()
-        .map(|result_values| result_values.unwrap_infallible())
+        .map(unwrap_infallible::UnwrapInfallible::unwrap_infallible)
         .map(|x| {
             let (a, b) = x.split_once(' ').unwrap();
             (a.to_owned(), b.parse::<u64>().unwrap())
@@ -16,7 +15,7 @@ fn get_input() -> Vec<(String, u64)> {
         .collect_vec()
 }
 
-pub fn d7() -> (u64, u64) {
+#[must_use] pub fn d7() -> (u64, u64) {
     let input = get_input();
 
     let r1 = input
@@ -65,13 +64,13 @@ fn get_hand_strength(h: &str) -> u64 {
     let max = m.into_values().max().unwrap();
 
     let strength: u64 = match u {
-        1 => 70000000000000,             // Five of a kind
-        2 if max == 4 => 60000000000000, // Four of a kind
-        2 if max == 3 => 50000000000000, // Full house
-        3 if max == 3 => 40000000000000, // Three of a kind
-        3 if max == 2 => 30000000000000, // Two pair
-        4 => 20000000000000,             // One pair
-        _ => 10000000000000,             // High card
+        1 => 70_000_000_000_000,             // Five of a kind
+        2 if max == 4 => 60_000_000_000_000, // Four of a kind
+        2 if max == 3 => 50_000_000_000_000, // Full house
+        3 if max == 3 => 40_000_000_000_000, // Three of a kind
+        3 if max == 2 => 30_000_000_000_000, // Two pair
+        4 => 20_000_000_000_000,             // One pair
+        _ => 10_000_000_000_000,             // High card
     };
 
     strength
@@ -95,21 +94,21 @@ fn get_hand_strength_joker(h: &str) -> u64 {
         .collect_vec();
 
     let max;
-    if !values.is_empty() {
-        max = values[0].1 + h.len() - z.len();
-    } else {
+    if values.is_empty() {
         u = 1;
         max = 5;
+    } else {
+        max = values[0].1 + h.len() - z.len();
     }
 
     let strength: u64 = match u {
-        1 => 70000000000000,             // Five of a kind
-        2 if max == 4 => 60000000000000, // Four of a kind
-        2 if max == 3 => 50000000000000, // Full house
-        3 if max == 3 => 40000000000000, // Three of a kind
-        3 if max == 2 => 30000000000000, // Two pair
-        4 => 20000000000000,             // One pair
-        _ => 10000000000000,             // High card
+        1 => 70_000_000_000_000,             // Five of a kind
+        2 if max == 4 => 60_000_000_000_000, // Four of a kind
+        2 if max == 3 => 50_000_000_000_000, // Full house
+        3 if max == 3 => 40_000_000_000_000, // Three of a kind
+        3 if max == 2 => 30_000_000_000_000, // Two pair
+        4 => 20_000_000_000_000,             // One pair
+        _ => 10_000_000_000_000,             // High card           // High card
     };
 
     strength

@@ -1,5 +1,3 @@
-use unwrap_infallible::UnwrapInfallible;
-
 use crate::util::read_all;
 
 fn get_calibration_values() -> Vec<String> {
@@ -7,11 +5,11 @@ fn get_calibration_values() -> Vec<String> {
 
     result_values
         .into_iter()
-        .map(|result_values| result_values.unwrap_infallible())
+        .map(unwrap_infallible::UnwrapInfallible::unwrap_infallible)
         .collect()
 }
 
-pub fn d1() -> (i64, usize) {
+#[must_use] pub fn d1() -> (i64, usize) {
     let calibration_values = get_calibration_values();
 
     let mut r1 = 0;

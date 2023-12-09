@@ -1,5 +1,4 @@
 use itertools::Itertools;
-use unwrap_infallible::UnwrapInfallible;
 
 use crate::util::read_all;
 
@@ -8,11 +7,11 @@ fn get_input() -> Vec<String> {
 
     result_values
         .into_iter()
-        .map(|result_values| result_values.unwrap_infallible())
+        .map(unwrap_infallible::UnwrapInfallible::unwrap_infallible)
         .collect()
 }
 
-pub fn d6() -> (u64, u64) {
+#[must_use] pub fn d6() -> (u64, u64) {
     let input = get_input();
 
     let times = input[0]

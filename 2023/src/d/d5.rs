@@ -1,5 +1,4 @@
 use itertools::Itertools;
-use unwrap_infallible::UnwrapInfallible;
 
 use crate::util::read_all;
 
@@ -8,13 +7,13 @@ fn get_input() -> Vec<String> {
 
     result_values
         .into_iter()
-        .map(|result_values| result_values.unwrap_infallible())
+        .map(unwrap_infallible::UnwrapInfallible::unwrap_infallible)
         .collect()
 }
 
-pub fn d5() -> (u64, u64) {
+#[must_use] pub fn d5() -> (u64, u64) {
     let input = get_input();
-    let input = input.split(|p| p.is_empty()).collect_vec();
+    let input = input.split(std::string::String::is_empty).collect_vec();
 
     let seeds = input[0][0]
         .split_once(':')

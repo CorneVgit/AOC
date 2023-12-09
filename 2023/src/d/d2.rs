@@ -1,5 +1,4 @@
 use itertools::Itertools;
-use unwrap_infallible::UnwrapInfallible;
 
 use crate::util::read_all;
 
@@ -8,11 +7,11 @@ fn get_games() -> Vec<String> {
 
     result_values
         .into_iter()
-        .map(|result_values| result_values.unwrap_infallible())
+        .map(unwrap_infallible::UnwrapInfallible::unwrap_infallible)
         .collect()
 }
 
-pub fn d2() -> (i32, i32) {
+#[must_use] pub fn d2() -> (i32, i32) {
     const BAG_RED: i32 = 12;
     const BAG_GREEN: i32 = 13;
     const BAG_BLUE: i32 = 14;

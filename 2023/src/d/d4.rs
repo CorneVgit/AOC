@@ -13,7 +13,7 @@ fn get_input() -> Vec<(String, u32)> {
         .collect()
 }
 
-pub fn d4() -> (u32, u32) {
+#[must_use] pub fn d4() -> (u32, u32) {
     let mut input = get_input();
 
     let mut counts: Vec<usize> = Vec::new();
@@ -28,16 +28,14 @@ pub fn d4() -> (u32, u32) {
             .1
             .split_once(" | ")
             .unwrap();
-        let numbers: HashSet<i32> = HashSet::from_iter(
-            numbers
-                .split_ascii_whitespace()
-                .map(|n| n.trim().parse::<i32>().unwrap()),
-        );
-        let winning_numbers: HashSet<i32> = HashSet::from_iter(
-            winning_numbers
-                .split_ascii_whitespace()
-                .map(|n| n.trim().parse::<i32>().unwrap()),
-        );
+        let numbers: HashSet<i32> = numbers
+            .split_ascii_whitespace()
+            .map(|n| n.trim().parse::<i32>().unwrap())
+            .collect();
+        let winning_numbers: HashSet<i32> = winning_numbers
+            .split_ascii_whitespace()
+            .map(|n| n.trim().parse::<i32>().unwrap())
+            .collect();
 
         let count = winning_numbers.intersection(&numbers).count();
         counts.push(count);

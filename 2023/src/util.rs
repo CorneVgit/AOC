@@ -1,17 +1,17 @@
 use std::str::FromStr;
 
-pub fn read_all<T: FromStr>(file_name: &str) -> Vec<Result<T, <T as FromStr>::Err>> {
-    let file_path = format!("data\\{}.txt", file_name);
+#[must_use] pub fn read_all<T: FromStr>(file_name: &str) -> Vec<Result<T, <T as FromStr>::Err>> {
+    let file_path = format!("data\\{file_name}.txt");
 
     std::fs::read_to_string(file_path)
         .expect("file not found!")
         .lines()
-        .map(|x| x.parse())
+        .map(str::parse)
         .collect()
 }
 
-pub fn read_single_string(file_name: &str) -> String {
-    let file_path = format!("data\\{}.txt", file_name);
+#[must_use] pub fn read_single_string(file_name: &str) -> String {
+    let file_path = format!("data\\{file_name}.txt");
 
     std::fs::read_to_string(file_path).expect("file not found!")
 }

@@ -1,4 +1,4 @@
-use aoc2023::d::d2::*;
+use aoc2023::d::d2::d2;
 
 fn main() {
     let (r1, r2) = d2();
