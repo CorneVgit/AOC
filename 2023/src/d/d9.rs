@@ -21,7 +21,7 @@ pub fn d9() -> (i64, i64) {
     let patterns = get_input();
 
     let (r1, r2) = patterns.iter().fold((0, 0), |acc, pattern| {
-        let extrapolation = extrapolate_value(&pattern);
+        let extrapolation = extrapolate_value(pattern);
         (
             acc.0 + pattern.last().unwrap() + extrapolation.0,
             acc.1 + pattern.first().unwrap() - extrapolation.1,
