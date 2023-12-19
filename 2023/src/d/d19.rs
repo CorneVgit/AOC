@@ -64,10 +64,10 @@ pub fn d19() -> (i64, u64) {
                 }
 
                 for (condition, destination) in workflows.get(current_workflow_name).unwrap() {
-                    if let [key, o, ..] = condition.chars().collect_vec()[..] {
-                        let part_v = part.get(&key).unwrap();
+                    if let [key, o, ..] = condition.chars().collect_vec().as_slice() {
+                        let part_v = part.get(key).unwrap();
                         let rule_v = &condition[2..].parse().unwrap();
-                        if !(o == '>' && part_v > rule_v || o == '<' && part_v < rule_v) {
+                        if !(o == &'>' && part_v > rule_v || o == &'<' && part_v < rule_v) {
                             continue;
                         }
                     }
