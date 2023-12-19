@@ -51,34 +51,33 @@ pub fn d19() -> (i64, u64) {
         })
         .collect();
 
-    let mut r1 = 0;
+    let r1 = parts
+        .into_iter()
+        .filter(|part| {
+            let mut current_workflow_name = "in";
 
-    'outer: for part in parts {
-        let mut current_workflow_name = "in";
-
-        loop {
-            match current_workflow_name {
-                "A" => break,
-                "R" => continue 'outer,
-                _ => (),
-            }
-
-            for (condition, destination) in workflows.get(current_workflow_name).unwrap() {
-                if let [key, o, ..] = condition.chars().collect_vec()[..] {
-                    let part_v = part.get(&key).unwrap();
-                    let rule_v = &condition[2..].parse::<i64>().unwrap();
-                    if !(o == '>' && part_v > rule_v || o == '<' && part_v < rule_v) {
-                        continue;
-                    }
+            loop {
+                match current_workflow_name {
+                    "A" => return true,
+                    "R" => return false,
+                    _ => (),
                 }
 
-                current_workflow_name = destination;
-                break;
-            }
-        }
+                for (condition, destination) in workflows.get(current_workflow_name).unwrap() {
+                    if let [key, o, ..] = condition.chars().collect_vec()[..] {
+                        let part_v = part.get(&key).unwrap();
+                        let rule_v = &condition[2..].parse().unwrap();
+                        if !(o == '>' && part_v > rule_v || o == '<' && part_v < rule_v) {
+                            continue;
+                        }
+                    }
 
-        r1 += part.values().sum::<i64>();
-    }
+                    current_workflow_name = destination;
+                    break;
+                }
+            }
+        })
+        .fold(0, |acc, part| acc + part.values().sum::<i64>());
 
     (r1, 0)
 }
