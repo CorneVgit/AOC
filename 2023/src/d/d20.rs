@@ -1,6 +1,7 @@
 use std::collections::{HashMap, VecDeque};
 
 use itertools::Itertools;
+use num::integer::lcm;
 
 use crate::util::read_all;
 
@@ -24,8 +25,9 @@ enum ModuleType {
 struct Module<'a> {
     module_type: ModuleType,
     destinations: Vec<&'a str>,
-    history: HashMap<&'a str, bool>,
+    sources: Vec<&'a str>,
     state: bool,
+    last_pulse: bool,
 }
 
 struct Command<'a> {
@@ -48,8 +50,10 @@ pub fn d20() -> (u64, u64) {
                 _ => panic!(),
             };
 
-            let l = line.trim_start_matches(|l: char| l.is_ascii_punctuation());
-            let (name, destinations) = l.split_once(" -> ").unwrap();
+            let (name, destinations) = line
+                .trim_start_matches(|l: char| l.is_ascii_punctuation())
+                .split_once(" -> ")
+                .unwrap();
             let destinations = destinations.split(", ").collect_vec();
 
             (
@@ -57,29 +61,36 @@ pub fn d20() -> (u64, u64) {
                 Module {
                     module_type,
                     destinations,
-                    history: HashMap::new(),
+                    sources: Vec::new(),
                     state: false,
+                    last_pulse: false,
                 },
             )
         })
         .collect();
 
-    let modules_clone = modules.clone();
-    for (name, module) in modules
-        .iter_mut()
-        .filter(|(_name, m)| m.module_type == ModuleType::Conjuction || m.history.is_empty())
-    {
-        modules_clone.iter().for_each(|(n, m)| {
-            if m.destinations.contains(name) {
-                module.history.insert(n, false);
+    for (source_name, source_module) in &modules.clone() {
+        for (name, module) in &mut modules {
+            if source_module.destinations.contains(name) {
+                module.sources.push(source_name);
             }
-        });
+        }
     }
+
+    let rx_source = modules
+        .iter()
+        .find(|x| x.1.destinations.contains(&"rx"))
+        .unwrap()
+        .0
+        .to_owned();
+    let mut occ: HashMap<&str, u64> = HashMap::new();
 
     let mut low = 0;
     let mut high = 0;
 
-    for _ in 0..1000 {
+    let mut r1 = 0;
+
+    for i in 1..u64::MAX {
         let mut queue: VecDeque<Command> = VecDeque::new();
 
         queue.push_back(Command {
@@ -88,51 +99,69 @@ pub fn d20() -> (u64, u64) {
             pulse: false,
         });
 
+        if occ.len() == modules.get(rx_source).unwrap().sources.len() && i > 1000 {
+            break;
+        }
+
         while !queue.is_empty() {
             let command = queue.pop_front().unwrap();
+
+            if modules
+                .get(rx_source)
+                .unwrap()
+                .sources
+                .contains(&command.source)
+                && command.pulse
+            {
+                occ.entry(command.source).or_insert(i);
+            }
 
             match command.pulse {
                 true => high += 1,
                 false => low += 1,
             }
 
-            let destination_module = match modules.get_mut(command.destination) {
+            let mut destination_module = match modules.get(command.destination).cloned() {
                 Some(d) => d,
                 None => {
                     continue;
                 }
             };
 
-            let pulse: bool;
             match destination_module.module_type {
                 ModuleType::FlipFlop => match command.pulse {
                     true => continue,
                     false => {
                         destination_module.state = !destination_module.state;
-                        pulse = destination_module.state;
+                        destination_module.last_pulse = destination_module.state;
                     }
                 },
                 ModuleType::Conjuction => {
-                    destination_module
-                        .history
-                        .insert(command.source, command.pulse);
-
-                    pulse = !destination_module.history.values().all(bool::to_owned);
+                    destination_module.last_pulse = !destination_module
+                        .sources
+                        .iter()
+                        .all(|s| modules.get(s).unwrap().last_pulse);
                 }
-                ModuleType::Broadcast => pulse = command.pulse,
+                ModuleType::Broadcast => destination_module.last_pulse = command.pulse,
             }
 
             for destination in &destination_module.destinations {
                 queue.push_back(Command {
                     source: command.destination,
                     destination,
-                    pulse,
+                    pulse: destination_module.last_pulse,
                 })
             }
+
+            modules.insert(command.destination, destination_module);
+        }
+
+        if i == 1000 {
+            r1 = low * high;
         }
     }
 
-    let r1 = low * high;
+    let r2 = occ.into_values().reduce(lcm).unwrap();
 
-    (r1, 0)
+    (r1, r2)
 }
