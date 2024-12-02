@@ -1,10 +1,9 @@
 use itertools::Itertools;
-use num::signum;
 
 use crate::util::read_all;
 
 fn get_values() -> Vec<Vec<u32>> {
-    let result_values = read_all::<String>("input_2_sample");
+    let result_values = read_all::<String>("input_2");
 
     result_values
         .into_iter()
@@ -28,23 +27,24 @@ pub fn d2() -> (usize, usize) {
 }
 
 fn is_safe(report: &[u32], tolerance: usize) -> bool {
-    let mut error_count = 0;
+    'outer: for i in 0..report.len() {
+        let r: Vec<&u32> = report[0..i]
+            .into_iter()
+            .chain(report[(i + tolerance)..report.len()].into_iter())
+            .collect();
 
-    let mut sig = signum(report[0] as i64 - report[1] as i64);
+        if !r.is_sorted() && !r.iter().rev().is_sorted() {
+            continue;
+        }
 
-    for (v1, v2) in report.iter().tuple_() {
-        let new_sig = signum(*v1 as i64 - *v2 as i64);
-
-        if !(1..=3).contains(&v1.abs_diff(*v2)) || new_sig != sig {
-            error_count += 1;
-
-            if error_count > tolerance {
-                return false;
+        for (v1, v2) in r.into_iter().tuple_windows() {
+            if !(1..=3).contains(&v1.abs_diff(*v2)) {
+                continue 'outer;
             }
         }
 
-        sig = new_sig;
+        return true;
     }
 
-    true
+    return false;
 }
