@@ -33,14 +33,13 @@ pub fn d10() -> (u64, u64) {
         }
     }
 
-    let (r1, r2) = walk_path(start, &input);
+    let r1 = walk_path(start, &input);
 
-    (r1, r2)
+    (r1, 0)
 }
 
-fn walk_path(start: (usize, usize), grid: &[Vec<char>]) -> (u64, u64) {
+fn walk_path(start: (usize, usize), grid: &[Vec<char>]) -> u64 {
     let mut steps = 0;
-    let mut count = 0;
     let mut pos = start;
     let mut dir = Dir::Unknown;
 
@@ -161,5 +160,5 @@ fn walk_path(start: (usize, usize), grid: &[Vec<char>]) -> (u64, u64) {
         }
     }
 
-    (steps / 2, count)
+    steps / 2
 }
