@@ -29,8 +29,8 @@ pub fn d2() -> (usize, usize) {
 fn is_safe(report: &[u32], tolerance: usize) -> bool {
     'outer: for i in 0..report.len() {
         let r: Vec<&u32> = report[0..i]
-            .into_iter()
-            .chain(report[(i + tolerance)..report.len()].into_iter())
+            .iter()
+            .chain(report[(i + tolerance)..report.len()].iter())
             .collect();
 
         if !r.is_sorted() && !r.iter().rev().is_sorted() {
@@ -46,5 +46,5 @@ fn is_safe(report: &[u32], tolerance: usize) -> bool {
         return true;
     }
 
-    return false;
+    false
 }
