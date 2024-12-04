@@ -32,12 +32,14 @@ pub fn d1() -> (u32, u32) {
     let m: HashMap<&u32, usize> = v2
         .iter()
         .dedup_with_count()
-        .into_group_map_by(|km| km.1) // group by value instead of count
+        // group by value instead of count
+        .into_group_map_by(|km| km.1)
         .into_iter()
         .map(|(value, count)| {
             (
                 value,
-                count.into_iter().fold(0, |acc, (count, _)| acc + count), // extract count out of the single element vector
+                // extract count out of the single element vector
+                count.into_iter().fold(0, |acc, (count, _)| acc + count),
             )
         })
         .collect();
