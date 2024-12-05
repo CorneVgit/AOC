@@ -11,6 +11,7 @@ fn get_values() -> Vec<Vec<char>> {
         .collect()
 }
 
+#[must_use]
 pub fn d4() -> (usize, usize) {
     let field = get_values();
 
@@ -23,8 +24,8 @@ pub fn d4() -> (usize, usize) {
 fn find_all_xmas(field: &[Vec<char>]) -> usize {
     let mut count = 0;
 
-    for x in 0..field.len() as u64 {
-        for y in 0..field[x as usize].len() as u64 {
+    for x in 0..field.len() as u32 {
+        for y in 0..field[x as usize].len() as u32 {
             if field[x as usize][y as usize] == 'X' {
                 for dx in -1..=1 {
                     for dy in -1..=1 {
@@ -40,11 +41,11 @@ fn find_all_xmas(field: &[Vec<char>]) -> usize {
     count
 }
 
-fn find_all_x_mas(field: &[Vec<char>]) -> usize{
+fn find_all_x_mas(field: &[Vec<char>]) -> usize {
     let mut count = 0;
 
-    for x in 0..field.len() as u64 {
-        for y in 0..field[x as usize].len() as u64 {
+    for x in 0..field.len() as u32 {
+        for y in 0..field[x as usize].len() as u32 {
             if field[x as usize][y as usize] == 'A'
                 && (
                     // Check if first diagonal == MAS
@@ -67,20 +68,20 @@ fn find_all_x_mas(field: &[Vec<char>]) -> usize{
     count
 }
 
-fn search_direction(x: u64, y: u64, dx: i64, dy: i64, field: &[Vec<char>], pattern: &str) -> bool {
-    let mut cx = x as i64 + dx;
-    let mut cy = y as i64 + dy;
+fn search_direction(x: u32, y: u32, dx: i64, dy: i64, field: &[Vec<char>], pattern: &str) -> bool {
+    let mut cx = i64::from(x) + dx;
+    let mut cy = i64::from(y) + dy;
 
     for ch in pattern.chars() {
         if cx < 0 || cy < 0 || cx >= field.len() as i64 || cy >= field.len() as i64 {
             return false;
         }
 
-        if field[cx as usize][cy as usize] != ch {
-            return false;
-        } else {
+        if field[cx as usize][cy as usize] == ch {
             cx += dx;
             cy += dy;
+        } else {
+            return false;
         }
     }
 

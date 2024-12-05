@@ -27,11 +27,8 @@ fn total_result_of_real_mul_operations(input_: &str, do_dont: bool) -> u64 {
         // I love ownership
         let inp = input.clone();
 
-        let mul = match take_until::<&str, &str, Error<&str>>("mul(")(&inp) {
-            // Possible mul instruction found
-            Ok(o) => o,
-            // No mul instruction left
-            Err(_) => break,
+        let Ok(mul) = take_until::<&str, &str, Error<&str>>("mul(")(&inp) else {
+            break;
         };
 
         if do_dont {
@@ -43,10 +40,10 @@ fn total_result_of_real_mul_operations(input_: &str, do_dont: bool) -> u64 {
                         // Start looking for more mul instructions
                         input = o.0.to_string();
                         continue;
-                    } else {
-                        // No next do instruction, so no more mul instructions to process
-                        break;
                     }
+
+                    // No next do instruction, so no more mul instructions to process
+                    break;
                 }
             }
         }
