@@ -1,3 +1,5 @@
+use unwrap_infallible::UnwrapInfallible;
+
 use crate::util::read_all;
 
 #[must_use]
@@ -6,7 +8,7 @@ fn get_values() -> Vec<Vec<char>> {
 
     result_values
         .into_iter()
-        .map(unwrap_infallible::UnwrapInfallible::unwrap_infallible)
+        .map(UnwrapInfallible::unwrap_infallible)
         .map(|v| v.chars().collect::<Vec<char>>())
         .collect()
 }

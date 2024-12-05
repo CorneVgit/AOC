@@ -12,15 +12,15 @@ panic = "abort"
 strip = true
 
 [dependencies]
-ascii = "1.1.0"
-# id_tree = "1.8.0"
+# ascii = "1.1.0"
+# ego-tree = "0.9.0"
 itertools = "0.13.0"
-nalgebra = "0.33.2"
+# nalgebra = "0.33.2"
 # regex = "1.7.0"
 # sets = "1.2.0"
 unwrap-infallible = "0.1.5"
-num = "0.4.1"
-euclid = "0.22.9"
+# num = "0.4.1"
+# euclid = "0.22.9"
 nom = "7.1.3"
 
 [dev-dependencies]

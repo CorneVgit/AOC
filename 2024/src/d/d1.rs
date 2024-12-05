@@ -1,6 +1,7 @@
 use std::collections::HashMap;
 
 use itertools::Itertools;
+use unwrap_infallible::UnwrapInfallible;
 
 use crate::util::read_all;
 
@@ -9,7 +10,7 @@ fn get_values() -> (Vec<u32>, Vec<u32>) {
 
     result_values
         .into_iter()
-        .map(unwrap_infallible::UnwrapInfallible::unwrap_infallible)
+        .map(UnwrapInfallible::unwrap_infallible)
         .map(|s| {
             let mut split = s.split_ascii_whitespace();
             (

@@ -1,4 +1,5 @@
 use itertools::Itertools;
+use unwrap_infallible::UnwrapInfallible;
 
 use crate::util::read_all;
 
@@ -7,7 +8,7 @@ fn get_values() -> Vec<Vec<u32>> {
 
     result_values
         .into_iter()
-        .map(unwrap_infallible::UnwrapInfallible::unwrap_infallible)
+        .map(UnwrapInfallible::unwrap_infallible)
         .map(|v| {
             v.split_ascii_whitespace()
                 .map(|x| str::parse(x).unwrap())

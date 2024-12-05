@@ -1,6 +1,11 @@
-use std::collections::{HashMap, HashSet};
+use std::{
+    cmp::Ordering,
+    collections::{HashMap, HashSet},
+    string::String,
+};
 
 use itertools::Itertools;
+use unwrap_infallible::UnwrapInfallible;
 
 use crate::util::read_all;
 
@@ -10,14 +15,15 @@ fn get_values() -> Vec<String> {
 
     result_values
         .into_iter()
-        .map(unwrap_infallible::UnwrapInfallible::unwrap_infallible)
+        .map(UnwrapInfallible::unwrap_infallible)
         .collect()
 }
 
-#[must_use] pub fn d5() -> (u64, u64) {
+#[must_use]
+pub fn d5() -> (u64, u64) {
     let values = get_values();
 
-    let mut iter = values.split(std::string::String::is_empty);
+    let mut iter = values.split(String::is_empty);
 
     let rules = iter.next().unwrap();
     let updates = iter
@@ -65,9 +71,9 @@ fn fix_incorrectly_ordered_update<'a>(
     u.iter()
         .sorted_by(|a, b| {
             if m.contains_key(a) && m[a].contains(b) {
-                std::cmp::Ordering::Greater
+                Ordering::Greater
             } else {
-                std::cmp::Ordering::Less
+                Ordering::Less
             }
         })
         .collect::<Vec<&u64>>()
