@@ -3,19 +3,17 @@ use unwrap_infallible::UnwrapInfallible;
 use crate::util::read_all;
 
 #[must_use]
-fn get_values() -> Vec<Vec<char>> {
-    let result_values = read_all::<String>("input_4");
-
-    result_values
+fn get_input() -> Vec<Vec<char>> {
+    read_all::<String>("input_4")
         .into_iter()
         .map(UnwrapInfallible::unwrap_infallible)
-        .map(|v| v.chars().collect::<Vec<char>>())
+        .map(|v| v.chars().collect())
         .collect()
 }
 
 #[must_use]
 pub fn d4() -> (usize, usize) {
-    let field = get_values();
+    let field = get_input();
 
     let r1 = find_all_xmas(&field);
     let r2 = find_all_x_mas(&field);

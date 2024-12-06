@@ -5,10 +5,8 @@ use unwrap_infallible::UnwrapInfallible;
 
 use crate::util::read_all;
 
-fn get_values() -> (Vec<u32>, Vec<u32>) {
-    let result_values = read_all::<String>("input_1");
-
-    result_values
+fn get_input() -> (Vec<u32>, Vec<u32>) {
+    read_all::<String>("input_1")
         .into_iter()
         .map(UnwrapInfallible::unwrap_infallible)
         .map(|s| {
@@ -23,7 +21,7 @@ fn get_values() -> (Vec<u32>, Vec<u32>) {
 
 #[must_use]
 pub fn d1() -> (u32, u32) {
-    let (mut v1, mut v2) = get_values();
+    let (mut v1, mut v2) = get_input();
 
     v1.sort_unstable();
     v2.sort_unstable();

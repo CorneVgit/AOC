@@ -10,10 +10,8 @@ use unwrap_infallible::UnwrapInfallible;
 use crate::util::read_all;
 
 #[must_use]
-fn get_values() -> Vec<String> {
-    let result_values = read_all::<String>("input_5");
-
-    result_values
+fn get_input() -> Vec<String> {
+    read_all::<String>("input_5")
         .into_iter()
         .map(UnwrapInfallible::unwrap_infallible)
         .collect()
@@ -21,21 +19,17 @@ fn get_values() -> Vec<String> {
 
 #[must_use]
 pub fn d5() -> (u64, u64) {
-    let values = get_values();
+    let values = get_input();
 
     let mut iter = values.split(String::is_empty);
 
     let rules = iter.next().unwrap();
-    let updates = iter
+    let updates: Vec<Vec<u64>> = iter
         .next()
         .unwrap()
         .iter()
-        .map(|u| {
-            u.split(',')
-                .map(|x| x.parse().unwrap())
-                .collect::<Vec<u64>>()
-        })
-        .collect::<Vec<Vec<u64>>>();
+        .map(|u| u.split(',').map(|x| x.parse().unwrap()).collect())
+        .collect();
 
     let mut m: HashMap<u64, HashSet<u64>> = HashMap::new();
 
@@ -76,7 +70,7 @@ fn fix_incorrectly_ordered_update<'a>(
                 Ordering::Less
             }
         })
-        .collect::<Vec<&u64>>()
+        .collect()
 }
 
 fn update_is_ordered(update: &[u64], m: &HashMap<u64, HashSet<u64>>) -> bool {
