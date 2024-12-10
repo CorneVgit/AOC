@@ -109,7 +109,7 @@ fn check_if_loop(
 ) -> bool {
     let mut direction = get_next_direction(&direction_);
     let mut current_position = current_position_;
-    
+
     if let Some(v) = field.get(&get_next_position(current_position, &direction)) {
         if *v == '#' {
             return false;
@@ -118,7 +118,6 @@ fn check_if_loop(
 
     loop {
         let potential_next_position = get_next_position(current_position, &direction);
-
 
         if direction == direction_ {
             return false;
