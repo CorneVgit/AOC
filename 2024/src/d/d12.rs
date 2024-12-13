@@ -9,7 +9,7 @@ use crate::util::read_all;
 
 #[must_use]
 fn get_input() -> HashMap<Coord, char> {
-    read_all::<String>("input_12_sample")
+    read_all::<String>("input_12")
         .into_iter()
         .map(UnwrapInfallible::unwrap_infallible)
         .enumerate()
@@ -76,88 +76,277 @@ fn count_sides(walked: &HashSet<Coord>) -> usize {
         .sorted_unstable_by_key(|p| (p.y, p.x))
         .collect_vec();
 
-    let mut sides = 0;
+    region.iter().map(|p| lookup(&region, p)).sum()
+}
 
-    for p in &region {
-        if !region.contains(&&(*p + North.coord()))
-            && !region.contains(&&(*p + East.coord()))
-            && !region.contains(&&(*p + South.coord()))
-            && !region.contains(&&(*p + West.coord()))
-        {
-            sides += 4;
-        }
-        if !region.contains(&&(*p + North.coord()))
-            && region.contains(&&(*p + East.coord()))
-            && !region.contains(&&(*p + South.coord()))
-            && !region.contains(&&(*p + West.coord()))
-        {
-            sides += 3;
-        }
-        if !region.contains(&&(*p + North.coord()))
-            && !region.contains(&&(*p + East.coord()))
-            && region.contains(&&(*p + South.coord()))
-            && !region.contains(&&(*p + West.coord()))
-        {
-            sides += 3;
-        }
-        if !region.contains(&&(*p + North.coord()))
-            && region.contains(&&(*p + East.coord()))
-            && region.contains(&&(*p + South.coord()))
-            && !region.contains(&&(*p + West.coord()))
-        {
-            sides += 2;
-        }
-        if !region.contains(&&(*p + South.coord()))
-            && region.contains(&&(*p + West.coord()))
-            && region.contains(&&(*p + SouthWest.coord()))
-        {
-            sides += 1;
-        }
-        if !region.contains(&&(*p + East.coord())) && !region.contains(&&(*p + North.coord())) {
-            sides += 1;
-        }
-        if !region.contains(&&(*p + West.coord()))
-            && !region.contains(&&(*p + East.coord()))
-            && region.contains(&&(*p + SouthWest.coord()))
-        {
-            sides += 1;
-        }
-        if region.contains(&&(*p + North.coord()))
-            && region.contains(&&(*p + East.coord()))
-            && !region.contains(&&(*p + South.coord()))
-            && !region.contains(&&(*p + West.coord()))
-        {
-            sides += 1;
-        }
-        if region.contains(&&(*p + North.coord()))
-            && !region.contains(&&(*p + East.coord()))
-            && !region.contains(&&(*p + South.coord()))
-            && !region.contains(&&(*p + West.coord()))
-        {
-            sides += 2;
-        }
-        if region.contains(&&(*p + North.coord()))
-            && region.contains(&&(*p + NorthEast.coord()))
-            && !region.contains(&&(*p + East.coord()))
-        {
-            sides += 1;
-        }
-        if !region.contains(&&(*p + North.coord()))
-            && region.contains(&&(*p + NorthWest.coord()))
-            && region.contains(&&(*p + West.coord()))
-            && region.contains(&&(*p + SouthWest.coord()))
-            && !region.contains(&&(*p + South.coord()))
-        {
-            sides += 2;
-        }
-        if !region.contains(&&(*p + North.coord()))
-            && region.contains(&&(*p + NorthWest.coord()))
-            && region.contains(&&(*p + West.coord()))
-            && region.contains(&&(*p + South.coord()))
-        {
-            sides += 1;
-        }
+fn lookup(region: &[&Coord], p: &Coord) -> usize {
+    let comb = (
+        region.contains(&&(*p + NorthWest.coord())),
+        region.contains(&&(*p + North.coord())),
+        region.contains(&&(*p + NorthEast.coord())),
+        region.contains(&&(*p + West.coord())),
+        region.contains(&&(*p + East.coord())),
+        region.contains(&&(*p + SouthWest.coord())),
+        region.contains(&&(*p + South.coord())),
+        region.contains(&&(*p + SouthEast.coord())),
+    );
+
+    match comb {
+        (true, true, true, true, true, true, true, true) => 0,
+        (true, true, true, true, true, true, true, false) => 0,
+        (true, true, true, true, true, true, false, true) => 1,
+        (true, true, true, true, true, true, false, false) => 1,
+        (true, true, true, true, true, false, true, true) => 0,
+        (true, true, true, true, true, false, true, false) => 0,
+        (true, true, true, true, true, false, false, true) => 0,
+        (true, true, true, true, true, false, false, false) => 0,
+        (true, true, true, true, false, true, true, true) => 1,
+        (true, true, true, true, false, true, true, false) => 1,
+        (true, true, true, true, false, true, false, true) => 2,
+        (true, true, true, true, false, true, false, false) => 2,
+        (true, true, true, true, false, false, true, true) => 1,
+        (true, true, true, true, false, false, true, false) => 1,
+        (true, true, true, true, false, false, false, true) => 1,
+        (true, true, true, true, false, false, false, false) => 1,
+        (true, true, true, false, true, true, true, true) => 1,
+        (true, true, true, false, true, true, true, false) => 1,
+        (true, true, true, false, true, true, false, true) => 2,
+        (true, true, true, false, true, true, false, false) => 2,
+        (true, true, true, false, true, false, true, true) => 1,
+        (true, true, true, false, true, false, true, false) => 1,
+        (true, true, true, false, true, false, false, true) => 2,
+        (true, true, true, false, true, false, false, false) => 2,
+        (true, true, true, false, false, true, true, true) => 2,
+        (true, true, true, false, false, true, true, false) => 2,
+        (true, true, true, false, false, true, false, true) => 3,
+        (true, true, true, false, false, true, false, false) => 3,
+        (true, true, true, false, false, false, true, true) => 2,
+        (true, true, true, false, false, false, true, false) => 2,
+        (true, true, true, false, false, false, false, true) => 3,
+        (true, true, true, false, false, false, false, false) => 3,
+        (true, true, false, true, true, true, true, true) => 0,
+        (true, true, false, true, true, true, true, false) => 0,
+        (true, true, false, true, true, true, false, true) => 1,
+        (true, true, false, true, true, true, false, false) => 1,
+        (true, true, false, true, true, false, true, true) => 0,
+        (true, true, false, true, true, false, true, false) => 0,
+        (true, true, false, true, true, false, false, true) => 0,
+        (true, true, false, true, true, false, false, false) => 0,
+        (true, true, false, true, false, true, true, true) => 0,
+        (true, true, false, true, false, true, true, false) => 0,
+        (true, true, false, true, false, true, false, true) => 1,
+        (true, true, false, true, false, true, false, false) => 1,
+        (true, true, false, true, false, false, true, true) => 0,
+        (true, true, false, true, false, false, true, false) => 0,
+        (true, true, false, true, false, false, false, true) => 0,
+        (true, true, false, true, false, false, false, false) => 0,
+        (true, true, false, false, true, true, true, true) => 1,
+        (true, true, false, false, true, true, true, false) => 1,
+        (true, true, false, false, true, true, false, true) => 2,
+        (true, true, false, false, true, true, false, false) => 2,
+        (true, true, false, false, true, false, true, true) => 1,
+        (true, true, false, false, true, false, true, false) => 1,
+        (true, true, false, false, true, false, false, true) => 2,
+        (true, true, false, false, true, false, false, false) => 2,
+        (true, true, false, false, false, true, true, true) => 1,
+        (true, true, false, false, false, true, true, false) => 1,
+        (true, true, false, false, false, true, false, true) => 2,
+        (true, true, false, false, false, true, false, false) => 2,
+        (true, true, false, false, false, false, true, true) => 1,
+        (true, true, false, false, false, false, true, false) => 1,
+        (true, true, false, false, false, false, false, true) => 2,
+        (true, true, false, false, false, false, false, false) => 2,
+        (true, false, true, true, true, true, true, true) => 1,
+        (true, false, true, true, true, true, true, false) => 1,
+        (true, false, true, true, true, true, false, true) => 2,
+        (true, false, true, true, true, true, false, false) => 2,
+        (true, false, true, true, true, false, true, true) => 1,
+        (true, false, true, true, true, false, true, false) => 1,
+        (true, false, true, true, true, false, false, true) => 1,
+        (true, false, true, true, true, false, false, false) => 1,
+        (true, false, true, true, false, true, true, true) => 2,
+        (true, false, true, true, false, true, true, false) => 2,
+        (true, false, true, true, false, true, false, true) => 3,
+        (true, false, true, true, false, true, false, false) => 3,
+        (true, false, true, true, false, false, true, true) => 2,
+        (true, false, true, true, false, false, true, false) => 2,
+        (true, false, true, true, false, false, false, true) => 2,
+        (true, false, true, true, false, false, false, false) => 2,
+        (true, false, true, false, true, true, true, true) => 2,
+        (true, false, true, false, true, true, true, false) => 2,
+        (true, false, true, false, true, true, false, true) => 3,
+        (true, false, true, false, true, true, false, false) => 3,
+        (true, false, true, false, true, false, true, true) => 2,
+        (true, false, true, false, true, false, true, false) => 2,
+        (true, false, true, false, true, false, false, true) => 3,
+        (true, false, true, false, true, false, false, false) => 3,
+        (true, false, true, false, false, true, true, true) => 3,
+        (true, false, true, false, false, true, true, false) => 3,
+        (true, false, true, false, false, true, false, true) => 4,
+        (true, false, true, false, false, true, false, false) => 4,
+        (true, false, true, false, false, false, true, true) => 3,
+        (true, false, true, false, false, false, true, false) => 3,
+        (true, false, true, false, false, false, false, true) => 4,
+        (true, false, true, false, false, false, false, false) => 4,
+        (true, false, false, true, true, true, true, true) => 1,
+        (true, false, false, true, true, true, true, false) => 1,
+        (true, false, false, true, true, true, false, true) => 2,
+        (true, false, false, true, true, true, false, false) => 2,
+        (true, false, false, true, true, false, true, true) => 1,
+        (true, false, false, true, true, false, true, false) => 1,
+        (true, false, false, true, true, false, false, true) => 1,
+        (true, false, false, true, true, false, false, false) => 1,
+        (true, false, false, true, false, true, true, true) => 2,
+        (true, false, false, true, false, true, true, false) => 2,
+        (true, false, false, true, false, true, false, true) => 3,
+        (true, false, false, true, false, true, false, false) => 3,
+        (true, false, false, true, false, false, true, true) => 2,
+        (true, false, false, true, false, false, true, false) => 2,
+        (true, false, false, true, false, false, false, true) => 2,
+        (true, false, false, true, false, false, false, false) => 2,
+        (true, false, false, false, true, true, true, true) => 2,
+        (true, false, false, false, true, true, true, false) => 2,
+        (true, false, false, false, true, true, false, true) => 3,
+        (true, false, false, false, true, true, false, false) => 3,
+        (true, false, false, false, true, false, true, true) => 2,
+        (true, false, false, false, true, false, true, false) => 2,
+        (true, false, false, false, true, false, false, true) => 3,
+        (true, false, false, false, true, false, false, false) => 3,
+        (true, false, false, false, false, true, true, true) => 3,
+        (true, false, false, false, false, true, true, false) => 3,
+        (true, false, false, false, false, true, false, true) => 4,
+        (true, false, false, false, false, true, false, false) => 4,
+        (true, false, false, false, false, false, true, true) => 3,
+        (true, false, false, false, false, false, true, false) => 3,
+        (true, false, false, false, false, false, false, true) => 4,
+        (true, false, false, false, false, false, false, false) => 4,
+        (false, true, true, true, true, true, true, true) => 0,
+        (false, true, true, true, true, true, true, false) => 0,
+        (false, true, true, true, true, true, false, true) => 1,
+        (false, true, true, true, true, true, false, false) => 1,
+        (false, true, true, true, true, false, true, true) => 0,
+        (false, true, true, true, true, false, true, false) => 0,
+        (false, true, true, true, true, false, false, true) => 0,
+        (false, true, true, true, true, false, false, false) => 0,
+        (false, true, true, true, false, true, true, true) => 1,
+        (false, true, true, true, false, true, true, false) => 1,
+        (false, true, true, true, false, true, false, true) => 2,
+        (false, true, true, true, false, true, false, false) => 2,
+        (false, true, true, true, false, false, true, true) => 1,
+        (false, true, true, true, false, false, true, false) => 1,
+        (false, true, true, true, false, false, false, true) => 1,
+        (false, true, true, true, false, false, false, false) => 1,
+        (false, true, true, false, true, true, true, true) => 0,
+        (false, true, true, false, true, true, true, false) => 0,
+        (false, true, true, false, true, true, false, true) => 1,
+        (false, true, true, false, true, true, false, false) => 1,
+        (false, true, true, false, true, false, true, true) => 0,
+        (false, true, true, false, true, false, true, false) => 0,
+        (false, true, true, false, true, false, false, true) => 1,
+        (false, true, true, false, true, false, false, false) => 1,
+        (false, true, true, false, false, true, true, true) => 1,
+        (false, true, true, false, false, true, true, false) => 1,
+        (false, true, true, false, false, true, false, true) => 2,
+        (false, true, true, false, false, true, false, false) => 2,
+        (false, true, true, false, false, false, true, true) => 1,
+        (false, true, true, false, false, false, true, false) => 1,
+        (false, true, true, false, false, false, false, true) => 2,
+        (false, true, true, false, false, false, false, false) => 2,
+        (false, true, false, true, true, true, true, true) => 0,
+        (false, true, false, true, true, true, true, false) => 0,
+        (false, true, false, true, true, true, false, true) => 1,
+        (false, true, false, true, true, true, false, false) => 1,
+        (false, true, false, true, true, false, true, true) => 0,
+        (false, true, false, true, true, false, true, false) => 0,
+        (false, true, false, true, true, false, false, true) => 0,
+        (false, true, false, true, true, false, false, false) => 0,
+        (false, true, false, true, false, true, true, true) => 0,
+        (false, true, false, true, false, true, true, false) => 0,
+        (false, true, false, true, false, true, false, true) => 1,
+        (false, true, false, true, false, true, false, false) => 1,
+        (false, true, false, true, false, false, true, true) => 0,
+        (false, true, false, true, false, false, true, false) => 0,
+        (false, true, false, true, false, false, false, true) => 0,
+        (false, true, false, true, false, false, false, false) => 0,
+        (false, true, false, false, true, true, true, true) => 0,
+        (false, true, false, false, true, true, true, false) => 0,
+        (false, true, false, false, true, true, false, true) => 1,
+        (false, true, false, false, true, true, false, false) => 1,
+        (false, true, false, false, true, false, true, true) => 0,
+        (false, true, false, false, true, false, true, false) => 0,
+        (false, true, false, false, true, false, false, true) => 1,
+        (false, true, false, false, true, false, false, false) => 1,
+        (false, true, false, false, false, true, true, true) => 0,
+        (false, true, false, false, false, true, true, false) => 0,
+        (false, true, false, false, false, true, false, true) => 1,
+        (false, true, false, false, false, true, false, false) => 1,
+        (false, true, false, false, false, false, true, true) => 0,
+        (false, true, false, false, false, false, true, false) => 0,
+        (false, true, false, false, false, false, false, true) => 1,
+        (false, true, false, false, false, false, false, false) => 1,
+        (false, false, true, true, true, true, true, true) => 0,
+        (false, false, true, true, true, true, true, false) => 0,
+        (false, false, true, true, true, true, false, true) => 1,
+        (false, false, true, true, true, true, false, false) => 1,
+        (false, false, true, true, true, false, true, true) => 0,
+        (false, false, true, true, true, false, true, false) => 0,
+        (false, false, true, true, true, false, false, true) => 0,
+        (false, false, true, true, true, false, false, false) => 0,
+        (false, false, true, true, false, true, true, true) => 1,
+        (false, false, true, true, false, true, true, false) => 1,
+        (false, false, true, true, false, true, false, true) => 2,
+        (false, false, true, true, false, true, false, false) => 2,
+        (false, false, true, true, false, false, true, true) => 1,
+        (false, false, true, true, false, false, true, false) => 1,
+        (false, false, true, true, false, false, false, true) => 1,
+        (false, false, true, true, false, false, false, false) => 1,
+        (false, false, true, false, true, true, true, true) => 2,
+        (false, false, true, false, true, true, true, false) => 2,
+        (false, false, true, false, true, true, false, true) => 3,
+        (false, false, true, false, true, true, false, false) => 3,
+        (false, false, true, false, true, false, true, true) => 2,
+        (false, false, true, false, true, false, true, false) => 2,
+        (false, false, true, false, true, false, false, true) => 3,
+        (false, false, true, false, true, false, false, false) => 3,
+        (false, false, true, false, false, true, true, true) => 3,
+        (false, false, true, false, false, true, true, false) => 3,
+        (false, false, true, false, false, true, false, true) => 4,
+        (false, false, true, false, false, true, false, false) => 4,
+        (false, false, true, false, false, false, true, true) => 3,
+        (false, false, true, false, false, false, true, false) => 3,
+        (false, false, true, false, false, false, false, true) => 4,
+        (false, false, true, false, false, false, false, false) => 4,
+        (false, false, false, true, true, true, true, true) => 0,
+        (false, false, false, true, true, true, true, false) => 0,
+        (false, false, false, true, true, true, false, true) => 1,
+        (false, false, false, true, true, true, false, false) => 1,
+        (false, false, false, true, true, false, true, true) => 0,
+        (false, false, false, true, true, false, true, false) => 0,
+        (false, false, false, true, true, false, false, true) => 0,
+        (false, false, false, true, true, false, false, false) => 0,
+        (false, false, false, true, false, true, true, true) => 1,
+        (false, false, false, true, false, true, true, false) => 1,
+        (false, false, false, true, false, true, false, true) => 2,
+        (false, false, false, true, false, true, false, false) => 2,
+        (false, false, false, true, false, false, true, true) => 1,
+        (false, false, false, true, false, false, true, false) => 1,
+        (false, false, false, true, false, false, false, true) => 1,
+        (false, false, false, true, false, false, false, false) => 1,
+        (false, false, false, false, true, true, true, true) => 2,
+        (false, false, false, false, true, true, true, false) => 2,
+        (false, false, false, false, true, true, false, true) => 3,
+        (false, false, false, false, true, true, false, false) => 3,
+        (false, false, false, false, true, false, true, true) => 2,
+        (false, false, false, false, true, false, true, false) => 2,
+        (false, false, false, false, true, false, false, true) => 3,
+        (false, false, false, false, true, false, false, false) => 3,
+        (false, false, false, false, false, true, true, true) => 3,
+        (false, false, false, false, false, true, true, false) => 3,
+        (false, false, false, false, false, true, false, true) => 4,
+        (false, false, false, false, false, true, false, false) => 4,
+        (false, false, false, false, false, false, true, true) => 3,
+        (false, false, false, false, false, false, true, false) => 3,
+        (false, false, false, false, false, false, false, true) => 4,
+        (false, false, false, false, false, false, false, false) => 4,
     }
-
-    sides
 }
