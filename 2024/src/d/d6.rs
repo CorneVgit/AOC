@@ -1,57 +1,49 @@
 use std::collections::{HashMap, HashSet};
 
+use direction::{CardinalDirection, Coord};
 use itertools::Itertools;
-use nalgebra::Point2;
 use unwrap_infallible::UnwrapInfallible;
 
 use crate::util::read_all;
 
 #[must_use]
-fn get_input() -> HashMap<Point2<i64>, char> {
+fn get_input() -> HashMap<Coord, char> {
     read_all::<String>("input_6")
         .into_iter()
         .map(UnwrapInfallible::unwrap_infallible)
         .enumerate()
-        .flat_map(|(y, v)| {
-            v.chars()
+        .flat_map(|(y, s)| {
+            s.chars()
                 .enumerate()
-                .map(|(x, w)| (Point2::new(x as i64, y as i64), w))
+                .map(|(x, c)| (Coord::new(x as i32, y as i32), c))
                 .collect_vec()
         })
         .collect()
-}
-
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
-enum Direction {
-    North,
-    West,
-    South,
-    East,
 }
 
 #[must_use]
 pub fn d6() -> (usize, usize) {
     let field = get_input();
 
-    let mut visited: HashMap<Point2<i64>, Direction> = HashMap::new();
-    let mut new_obstacles: HashSet<Point2<i64>> = HashSet::new();
+    let mut visited: HashMap<Coord, CardinalDirection> = HashMap::new();
+    let mut new_obstacles: HashSet<Coord> = HashSet::new();
     let start_position = match find_guard(&field) {
         Some(g) => g,
         None => panic!("No guard!"),
     };
     let mut current_position = start_position;
-    let mut direction = Direction::North;
+    let mut direction = CardinalDirection::North;
 
     loop {
         visited.insert(current_position, direction);
 
-        let potential_next_position = get_next_position(current_position, &direction);
+        let potential_next_position = current_position + direction.coord();
 
         match field.get(&potential_next_position) {
             Some(v) => {
                 if *v == '#' {
-                    direction = get_next_direction(&direction);
-                    current_position = get_next_position(current_position, &direction);
+                    direction = direction.right90();
+                    current_position += direction.coord();
                 } else {
                     if check_if_loop(current_position, direction, &field, &visited) {
                         // println!("{potential_next_position:?}");
@@ -73,7 +65,7 @@ pub fn d6() -> (usize, usize) {
     (r1, r2)
 }
 
-fn find_guard(field: &HashMap<Point2<i64>, char>) -> Option<Point2<i64>> {
+fn find_guard(field: &HashMap<Coord, char>) -> Option<Coord> {
     for (p, v) in field {
         if *v == '^' {
             return Some(*p);
@@ -83,41 +75,23 @@ fn find_guard(field: &HashMap<Point2<i64>, char>) -> Option<Point2<i64>> {
     None
 }
 
-fn get_next_direction(dir: &Direction) -> Direction {
-    match dir {
-        Direction::North => Direction::East,
-        Direction::East => Direction::South,
-        Direction::South => Direction::West,
-        Direction::West => Direction::North,
-    }
-}
-
-fn get_next_position(current_position: Point2<i64>, direction: &Direction) -> Point2<i64> {
-    match direction {
-        Direction::North => (current_position.coords + Point2::new(0, -1).coords).into(),
-        Direction::East => (current_position.coords + Point2::new(1, 0).coords).into(),
-        Direction::South => (current_position.coords + Point2::new(0, 1).coords).into(),
-        Direction::West => (current_position.coords + Point2::new(-1, 0).coords).into(),
-    }
-}
-
 fn check_if_loop(
-    current_position_: Point2<i64>,
-    direction_: Direction,
-    field: &HashMap<Point2<i64>, char>,
-    visited: &HashMap<Point2<i64>, Direction>,
+    current_position_: Coord,
+    direction_: CardinalDirection,
+    field: &HashMap<Coord, char>,
+    visited: &HashMap<Coord, CardinalDirection>,
 ) -> bool {
-    let mut direction = get_next_direction(&direction_);
+    let mut direction = direction_.right90();
     let mut current_position = current_position_;
 
-    if let Some(v) = field.get(&get_next_position(current_position, &direction)) {
+    if let Some(v) = field.get(&(current_position + direction.coord())) {
         if *v == '#' {
             return false;
         }
     }
 
     loop {
-        let potential_next_position = get_next_position(current_position, &direction);
+        let potential_next_position = current_position + direction.coord();
 
         if direction == direction_ {
             return false;
@@ -131,8 +105,8 @@ fn check_if_loop(
                     {
                         return true;
                     }
-                    direction = get_next_direction(&direction);
-                    current_position = get_next_position(current_position, &direction);
+                    direction = direction.right90();
+                    current_position += direction.coord();
                 } else {
                     current_position = potential_next_position;
                 }
@@ -144,7 +118,6 @@ fn check_if_loop(
             return true;
         }
     }
-
 
     // loop {
     //     let potential_next_position = get_next_position(current_position, &direction);

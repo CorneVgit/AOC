@@ -1,21 +1,21 @@
 use std::collections::{HashMap, HashSet};
 
+use direction::Coord;
 use itertools::Itertools;
-use nalgebra::Point2;
 use unwrap_infallible::UnwrapInfallible;
 
 use crate::util::read_all;
 
 #[must_use]
-fn get_input() -> HashMap<Point2<i64>, char> {
+fn get_input() -> HashMap<Coord, char> {
     read_all::<String>("input_8")
         .into_iter()
         .map(UnwrapInfallible::unwrap_infallible)
         .enumerate()
-        .flat_map(|(y, v)| {
-            v.chars()
+        .flat_map(|(y, s)| {
+            s.chars()
                 .enumerate()
-                .map(|(x, w)| (Point2::new(x as i64, y as i64), w))
+                .map(|(x, c)| (Coord::new(x as i32, y as i32), c))
                 .collect_vec()
         })
         .collect()
@@ -25,7 +25,7 @@ fn get_input() -> HashMap<Point2<i64>, char> {
 pub fn d8() -> (usize, usize) {
     let field = get_input();
 
-    let mut antennas: HashMap<char, HashSet<Point2<i64>>> = HashMap::new();
+    let mut antennas: HashMap<char, HashSet<Coord>> = HashMap::new();
 
     for (location, frequency) in field.iter().filter(|e| !".#".contains(*e.1)) {
         antennas
@@ -43,8 +43,8 @@ pub fn d8() -> (usize, usize) {
 }
 
 fn count_antinodes(
-    antennas: &HashMap<char, HashSet<nalgebra::OPoint<i64, nalgebra::Const<2>>>>,
-    field: &HashMap<nalgebra::OPoint<i64, nalgebra::Const<2>>, char>,
+    antennas: &HashMap<char, HashSet<Coord>>,
+    field: &HashMap<Coord, char>,
     resonance: bool,
 ) -> usize {
     let mut antinodes = HashSet::new();
@@ -54,12 +54,12 @@ fn count_antinodes(
             let dx = loc_pair[0].x - loc_pair[1].x;
             let dy = loc_pair[0].y - loc_pair[1].y;
 
-            let mut next_a = loc_pair[0].xy();
-            let mut next_b = loc_pair[1].xy();
+            let mut next_a = *loc_pair[0];
+            let mut next_b = *loc_pair[1];
 
             if !resonance {
-                next_a = Point2::new(loc_pair[0].x + dx, loc_pair[0].y + dy);
-                next_b = Point2::new(loc_pair[1].x - dx, loc_pair[1].y - dy);
+                next_a = Coord::new(loc_pair[0].x + dx, loc_pair[0].y + dy);
+                next_b = Coord::new(loc_pair[1].x - dx, loc_pair[1].y - dy);
             }
 
             loop {
@@ -80,8 +80,8 @@ fn count_antinodes(
                     break;
                 }
 
-                next_a = Point2::new(next_a.x + dx, next_a.y + dy);
-                next_b = Point2::new(next_b.x - dx, next_b.y - dy);
+                next_a = Coord::new(next_a.x + dx, next_a.y + dy);
+                next_b = Coord::new(next_b.x - dx, next_b.y - dy);
             }
         }
     }
