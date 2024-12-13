@@ -1,9 +1,8 @@
 use std::collections::{HashMap, HashSet};
 
-use direction::{CardinalDirection, Coord, Direction};
+use direction::{CardinalDirection, Coord, Direction::*};
 use itertools::Itertools;
 use unwrap_infallible::UnwrapInfallible;
-use Direction::*;
 
 use crate::util::read_all;
 
