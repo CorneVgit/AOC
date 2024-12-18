@@ -79,7 +79,7 @@ fn count_sides(walked: &HashSet<Coord>) -> usize {
 }
 
 fn lookup(region: &[&Coord], p: &Coord) -> usize {
-    let comb = (
+    match (
         region.contains(&&(*p + NorthWest.coord())),
         region.contains(&&(*p + North.coord())),
         region.contains(&&(*p + NorthEast.coord())),
@@ -88,9 +88,7 @@ fn lookup(region: &[&Coord], p: &Coord) -> usize {
         region.contains(&&(*p + SouthWest.coord())),
         region.contains(&&(*p + South.coord())),
         region.contains(&&(*p + SouthEast.coord())),
-    );
-
-    match comb {
+    ) {
         (true, true, true, true, true, true, true, true) => 0,
         (true, true, true, true, true, true, true, false) => 0,
         (true, true, true, true, true, true, false, true) => 1,
