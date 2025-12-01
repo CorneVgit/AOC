@@ -1,0 +1,33 @@
+[package]
+name = "aoc2025"
+version = "0.1.0"
+edition = "2024"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[profile.release]
+codegen-units = 1
+lto = true
+panic = "abort"
+strip = true
+
+[dependencies]
+# ascii = "1.1.0"
+# ego-tree = "0.9.0"
+itertools = "0.14.0"
+# nalgebra = "0.33.2"
+# regex = "1.7.0"
+# sets = "1.2.0"
+unwrap-infallible = "0.1.5"
+# num = "0.4.3"
+# euclid = "0.22.9"
+# nom = "8.0.0"
+# direction = "0.18.1"
+# colored = "2.2.0"
+
+[dev-dependencies]
+# criterion = "0.5.1"
+
+# [[bench]]
+# name = "d"
+# harness = false
