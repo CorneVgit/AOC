@@ -55,7 +55,7 @@ fn remove_paper(paper_locations: &HashSet<(isize, isize)>) -> HashSet<(isize, is
     paper_locations
         .iter()
         .filter(|location| check_neighbours(paper_locations, location))
-        .cloned()
+        .copied()
         .collect()
 }
 

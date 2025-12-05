@@ -32,14 +32,14 @@ pub fn d1() -> (i32, i32) {
                     pos = 100;
                 }
                 zeroes += (100 - pos + rotation.1) / 100;
-                pos -= rotation.1
+                pos -= rotation.1;
             }
             'R' => {
                 zeroes += (pos + rotation.1) / 100;
-                pos += rotation.1
+                pos += rotation.1;
             }
             _ => (),
-        };
+        }
 
         pos = pos.rem_euclid(100);
 

@@ -33,7 +33,7 @@ fn calculate_joltage(banks: &[Vec<u32>], amount: u32) -> u64 {
                     .unwrap()
                     + start_offset;
 
-                joltage += bank[position] as u64 * 10u64.pow(end_offset);
+                joltage += u64::from(bank[position]) * 10u64.pow(end_offset);
                 start_offset = position + 1;
             }
 
